@@ -1,5 +1,4 @@
 ﻿using Application.Commands;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 

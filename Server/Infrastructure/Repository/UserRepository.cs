@@ -1,9 +1,8 @@
 using Domain.Entities;
 using Domain.Interfaces;
-using Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace CleanArchCosmosAPI.Infrastructure.Repositories
+namespace Infrastructure.Repository
 {
     public class UserRepository : IUserRepository
     {
@@ -26,7 +25,11 @@ namespace CleanArchCosmosAPI.Infrastructure.Repositories
             return await _context.Users
                 .FirstOrDefaultAsync(u => u.UserName == login || u.Email == login );
         }
-
+        public async Task<User?> GetUserByIdAsync(string userId)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.id == userId);
+        }
         public async Task<bool> IsUsernameTakenAsync(string username)
         {
             var user = await _context.Users
