@@ -5,7 +5,6 @@ using Infrastructure.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using CleanArchCosmosAPI.Infrastructure.Repositories;
 using Application.CommandHandlers;
 using Microsoft.OpenApi.Models;
 

@@ -1,4 +1,5 @@
 using MediatR;
+
 namespace Application.Commands
 {
     public class LoginCommand : IRequest<string>
