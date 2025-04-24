@@ -18,12 +18,27 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
         {
+            command.Email = command.Email.ToLower();
+            command.UserName = command.UserName.ToLower();
+
+            if (string.IsNullOrWhiteSpace(command.Email))
+                return BadRequest(new { error = "Email should not be null or with space." });
+            if (string.IsNullOrWhiteSpace(command.UserName))
+                return BadRequest(new { error = "User name should not be null or with space." });
+            if (string.IsNullOrWhiteSpace(command.Password))
+                return BadRequest(new { error = "Password should not be null or with space." });
+            if (command.Role != "Student" && command.Role != "Teacher")
+                return BadRequest(new { error = "Role should be Student or Teacher." });
             try
             {
                 var accessToken = await _mediator.Send(command);
                 return Ok(new { accessToken });
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { error = ex.Message });
+            }
+            catch (InvalidOperationException ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
@@ -32,16 +47,17 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginCommand command)
         {
+            command.Login = command.Login.ToLower();
             try
             {
                 var accessToken = await _mediator.Send(command);
                 return Ok(new { accessToken });
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new { error = "Invalid credentials." });
+                return Unauthorized(new { error = ex.Message });
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
