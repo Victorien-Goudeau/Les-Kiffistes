@@ -1,5 +1,6 @@
+using System.Text;
+using UglyToad.PdfPig;
 using Domain.Interfaces;
-using Spire.Pdf;
 
 namespace Infrastructure.Service
 {
@@ -7,24 +8,24 @@ namespace Infrastructure.Service
     {
         public async Task<string> ConvertPdfToMarkdownAsync(byte[] pdfFileBytes)
         {
-            // Load the PDF document from the byte array
+            if (pdfFileBytes == null || pdfFileBytes.Length == 0)
+                throw new ArgumentException("PDF File can't be empty", nameof(pdfFileBytes));
+
             using (var memoryStream = new MemoryStream(pdfFileBytes))
+            using (PdfDocument document = PdfDocument.Open(memoryStream))
             {
-                PdfDocument pdf = new PdfDocument();
-                pdf.LoadFromStream(memoryStream);
+                var markdown = new StringBuilder();
 
-                // Convert the PDF to Markdown format
-                using (var markdownStream = new MemoryStream())
+                markdown.AppendLine("# Document 1");
+                foreach (var page in document.GetPages())
                 {
-                    pdf.SaveToStream(markdownStream, FileFormat.Markdown);
-                    markdownStream.Position = 0;
-
-                    using (var reader = new StreamReader(markdownStream))
-                    {
-                        return await reader.ReadToEndAsync();
-                    }
+                    var pageText = page.Text;
+                    markdown.AppendLine(pageText);
+                    markdown.AppendLine();
                 }
+
+                return await Task.FromResult(markdown.ToString());
             }
         }
-    }    
+    }
 }

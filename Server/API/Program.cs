@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Application.CommandHandlers;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.HttpLogging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,6 +76,15 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+// Register the HTTP logging services
+builder.Services.AddHttpLogging(options =>
+{
+    options.LoggingFields = HttpLoggingFields.None; // Log all available fields
+    options.RequestBodyLogLimit = 4096; // Limit request body size to 4 KB
+    options.ResponseBodyLogLimit = 4096; // Limit response body size to 4 KB
+    options.CombineLogs = true; // Combine request and response logs into a single entry
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "AllowOrigin",
@@ -99,6 +109,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowOrigin");
 
 app.UseHttpsRedirection();
+
+app.UseHttpLogging();
 
 app.UseAuthentication();
 
