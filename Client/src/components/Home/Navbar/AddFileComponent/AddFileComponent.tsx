@@ -15,7 +15,7 @@ function AddFileComponent() {
                     createdAt: new Date().toISOString(),
                 }
                 console.log("Selected file:", data);
-                callApi("POST", "courses/add", JSON.stringify(data))
+                callApi("POST", "Course/add", JSON.stringify(data))
                     .then((response) => {
                         if (response.status === 200) {
                             return response.json();

@@ -10,6 +10,9 @@ function Home() {
     useEffect(() => {
         const sessionToken = sessionStorage.getItem("token");
         const localToken = localStorage.getItem("token");
+
+        console.log("Session Token:", sessionToken);
+        console.log("Local Token:", localToken);
         if (!sessionToken && !localToken) {
             window.location.href = "/login";
         }
