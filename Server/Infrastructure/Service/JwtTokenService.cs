@@ -27,7 +27,7 @@ namespace Infrastructure.Service
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.id),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Role, user.Role),

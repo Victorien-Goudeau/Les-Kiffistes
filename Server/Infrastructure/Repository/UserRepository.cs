@@ -23,23 +23,23 @@ namespace Infrastructure.Repository
         public async Task<User?> GetUserByUsernameOrEmailAsync(string login)
         {
             return await _context.Users
-                .FirstOrDefaultAsync(u => u.UserName == login || u.Email == login );
+                .FirstOrDefaultAsync(u => string.Equals(u.UserName.ToLower(), login.ToLower()) || string.Equals(u.Email.ToLower(), login.ToLower()));
         }
         public async Task<User?> GetUserByIdAsync(string userId)
         {
             return await _context.Users
-                .FirstOrDefaultAsync(u => u.id == userId);
+                .FirstOrDefaultAsync(u => u.Id == userId);
         }
         public async Task<bool> IsUsernameTakenAsync(string username)
         {
             var user = await _context.Users
-                .Where(u => u.UserName == username).FirstOrDefaultAsync();
+                .Where(u => string.Equals(u.UserName.ToLower(), username.ToLower())).FirstOrDefaultAsync();
             return user != null;
         }
         public async Task<bool> IsEmailTakenAsync(string email)
         {
             var user = await _context.Users
-                .Where(u => u.Email == email).FirstOrDefaultAsync();
+                .Where(u => string.Equals(u.Email.ToLower(), email.ToLower())).FirstOrDefaultAsync();
             return user != null;
         }
     }

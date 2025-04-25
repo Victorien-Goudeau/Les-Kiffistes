@@ -21,7 +21,7 @@ namespace Application.CommandHandlers
                 throw new UnauthorizedAccessException("Invalid credentials.");
 
             return new UserDto() {
-                id = user.id,
+                id = user.Id,
                 UserName = user.UserName,
                 Email=user.Email,
                 Role = user.Role

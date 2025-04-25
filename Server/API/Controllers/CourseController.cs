@@ -9,17 +9,17 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class CourseController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public UserController(IMediator mediator)
+        public CourseController(IMediator mediator)
         {
             _mediator = mediator;
         }
         [Authorize]
-        [HttpGet("me")]
-        public async Task<ActionResult<UserDto>> GetUserInfos()
+        [HttpGet("all")]
+        public async Task<ActionResult<List<CourseDto>>> GetAllCourses()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -28,9 +28,9 @@ namespace API.Controllers
 
             try
             {
-                var query = new GetCurrentUserQuery(){UserId = userId};
-                var userDto = await _mediator.Send(query);
-                return Ok(userDto);
+                var query = new GetUserCoursesQuery(){UserId = userId};
+                var Courses = await _mediator.Send(query);
+                return Ok(Courses);
             }
             catch (UnauthorizedAccessException)
             {

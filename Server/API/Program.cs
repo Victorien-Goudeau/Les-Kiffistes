@@ -47,6 +47,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         databaseName: "TeachingPlatforme"));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 builder.Services.AddAuthentication(options =>
