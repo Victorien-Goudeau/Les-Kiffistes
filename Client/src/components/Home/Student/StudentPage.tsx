@@ -7,13 +7,12 @@ import Modules from './Modules/Modules';
 import Courses from './Courses/Courses';
 
 function StudentPage() {
-    const [selectedLink, setSelectedLink] = useState('home');
     return (
         <div className='student-page'>
             <Navbar />
             <Routes>
-                <Route path="/my-courses" element={<Courses />} />
-                <Route path="my-modules" element={<Modules />} />
+                <Route path="/course" element={<Courses />} />
+                <Route path="/modules" element={<Modules />} />
                 <Route path="/profile" element={<Body />} />
                 <Route path="/*" element={<Body />} />
             </Routes>

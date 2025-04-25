@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "react-markdown": "^10.1.0",
+    "react-pdf": "^9.2.1"
+  }
+}

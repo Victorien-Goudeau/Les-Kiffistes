@@ -1,7 +1,6 @@
 function Courses() {
     return (
         <div className="courses">
-            
         </div>
     );
 }

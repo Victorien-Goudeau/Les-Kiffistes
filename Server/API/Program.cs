@@ -20,7 +20,7 @@ builder.Services.AddMediatR(cfg =>
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseCosmos(
-        builder.Configuration.GetConnectionString("CosmosDb")!, 
+        builder.Configuration.GetConnectionString("CosmosDb")!,
         databaseName: "TeachingPlatforme"));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -47,6 +47,18 @@ builder.Services.AddAuthentication(options =>
             ValidateLifetime = true,
             ClockSkew = TimeSpan.FromMinutes(1)
         };
+    });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowOrigin",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        });
 });
 
 var app = builder.Build();
@@ -57,6 +69,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowOrigin");
 
 app.UseHttpsRedirection();
 

@@ -5,11 +5,9 @@ import StudentPage from './components/Home/Student/StudentPage';
 import TeacherPage from './components/Home/Teacher/TeacherPage';
 import Login from './components/Login/Login';
 import Register from './components/Register/Register';
-import { useAuth } from './contexts/AuthContext';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
-  const { user } = useAuth();
   return (
 
     <div className="App">
@@ -20,7 +18,7 @@ function App() {
       )} */}
       <Router>
         <Routes>
-          <Route path="/" element={user ? <Home /> : <Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home/*" element={<Home />}>
