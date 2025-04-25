@@ -29,7 +29,7 @@ namespace Application.CommandHandlers
 
             var user = new User
             {
-                id = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid().ToString(),
                 UserName = command.UserName,
                 Email = command.Email,
                 Password = passwordHash,
