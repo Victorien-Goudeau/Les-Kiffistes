@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useApi } from "../../../../customs/useApi";
 
 function AddFileComponent() {
+    const { callApi } = useApi();
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files?.[0];
 
@@ -13,13 +15,21 @@ function AddFileComponent() {
                     createdAt: new Date().toISOString(),
                 }
                 console.log("Selected file:", data);
-                // fetch('/upload', {
-                //     method: 'POST',
-                //     body: JSON.stringify(data),
-                // })
-                //     .then(response => response.json())
-                //     .then(data => console.log('File uploaded successfully:', data))
-                //     .catch(error => console.error('Error uploading file:', error));
+                callApi("POST", "courses/add", JSON.stringify(data))
+                    .then((response) => {
+                        if (response.status === 200) {
+                            return response.json();
+                        } else {
+                            throw new Error("File upload failed");
+                        }
+                    })
+                    .then((data) => {
+                        console.log("File uploaded successfully:", data);
+                        window.location.reload();
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                    });
             }
             reader.readAsArrayBuffer(selectedFile);
         }
