@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Application.Dtos;
 using System.Security.Claims;
 using Application.Queries;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Application.Commands;
 
 namespace API.Controllers
 {
@@ -35,6 +37,28 @@ namespace API.Controllers
             catch (UnauthorizedAccessException)
             {
                 return Unauthorized(new { error = "Invalid credentials." });
+            }
+            catch
+            {
+                return BadRequest(new { error = "Unknown error." });
+            }
+        }
+        [Authorize]
+        [HttpPost("add")]
+        public async Task<ActionResult<List<CourseDto>>> CreateNewCourse([FromBody] CreateCourseCommand createCourseCommand)
+        {
+            try
+            {
+                var Course = await _mediator.Send(createCourseCommand);
+                return Ok(Course);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized(new { error = "Invalid credentials." });
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(new { error = e.Message });
             }
             catch
             {
