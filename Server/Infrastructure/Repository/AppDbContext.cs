@@ -10,7 +10,6 @@ namespace Infrastructure.Repository
         public DbSet<Course> Courses { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // ── USER ───────────────────────────────────────────────────────────────
             modelBuilder.Entity<User>(b =>
             {
                 b.ToContainer("Users");
@@ -24,7 +23,6 @@ namespace Infrastructure.Repository
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // ── COURSE ─────────────────────────────────────────────────────────────
             modelBuilder.Entity<Course>(b =>
             {
                 b.ToContainer("Courses");
@@ -32,7 +30,7 @@ namespace Infrastructure.Repository
                 b.Property(c => c.Id).ToJsonProperty("id");
                 b.HasPartitionKey(c => c.UserId);
 
-                b.HasMany(c => c.Quiz)           // attention au nom de la collection
+                b.HasMany(c => c.Quiz)
                 .WithOne(q => q.Course)
                 .HasForeignKey(q => q.CourseId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -43,8 +41,6 @@ namespace Infrastructure.Repository
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // ── AIMODULE ↔ QUIZ (1-à-1) ─────────────────────────────────────────────
-            // On fait dépendant Quiz sur AIModule via Quiz.AIModuleId
             modelBuilder.Entity<AIModule>(b =>
             {
                 b.ToContainer("AIModules");
@@ -58,7 +54,6 @@ namespace Infrastructure.Repository
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // ── QUIZ ────────────────────────────────────────────────────────────────
             modelBuilder.Entity<Quiz>(b =>
             {
                 b.ToContainer("Quiz");
@@ -76,7 +71,6 @@ namespace Infrastructure.Repository
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // ── QUESTION ────────────────────────────────────────────────────────────
             modelBuilder.Entity<Question>(b =>
             {
                 b.ToContainer("Questions");
