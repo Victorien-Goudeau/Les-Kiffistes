@@ -30,9 +30,9 @@ function Login() {
             .then((data) => {
                 setError(false);
                 if (rememberMeRef.current?.checked) {
-                    localStorage.setItem("token", data);
+                    localStorage.setItem("token", data.accessToken);
                 } else {
-                    sessionStorage.setItem("token", data);
+                    sessionStorage.setItem("token", data.accessToken);
                 }
                 window.location.href = "/home";
             })
