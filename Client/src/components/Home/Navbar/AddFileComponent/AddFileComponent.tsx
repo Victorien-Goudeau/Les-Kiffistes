@@ -11,10 +11,9 @@ function AddFileComponent() {
             reader.onload = (e) => {
                 const data = {
                     title: selectedFile.name.split(".")[0],
-                    fileContent: new Uint8Array(e.target?.result as ArrayBuffer),
+                    fileContent: e.target?.result as string,
                     createdAt: new Date().toISOString(),
                 }
-                console.log("Selected file:", data);
                 callApi("POST", "Course/add", JSON.stringify(data))
                     .then((response) => {
                         if (response.status === 200) {
@@ -31,7 +30,7 @@ function AddFileComponent() {
                         console.error("Error:", error);
                     });
             }
-            reader.readAsArrayBuffer(selectedFile);
+            reader.readAsDataURL(selectedFile);
         }
     };
 
