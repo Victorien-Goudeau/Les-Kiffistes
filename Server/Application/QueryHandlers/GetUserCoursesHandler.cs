@@ -24,7 +24,7 @@ namespace Application.CommandHandlers
                 Title = x.Title,
                 Subject = x.Subject,
                 Content = x.Content,
-                FileContent = x.FileContent,
+                FileContent = x.FileContent != null ? Convert.ToBase64String(x.FileContent) : null,
                 CreatedAt = x.CreatedAt,
             }).ToList();
         }

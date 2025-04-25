@@ -41,8 +41,9 @@ namespace Application.CommandHandlers
 
             if (user == null)
                 throw new UnauthorizedAccessException("User is not authenticated.");
-
-            var fileContent = await _pdfToMarkdownService.ConvertPdfToMarkdownAsync(command.FileContent);
+            
+            var fileContentBytes = Convert.FromBase64String(command.FileContent);
+            var fileContent = await _pdfToMarkdownService.ConvertPdfToMarkdownAsync(fileContentBytes);
 
             var course = new Course
             {
@@ -50,7 +51,7 @@ namespace Application.CommandHandlers
                 Title = command.Title,
                 Content = fileContent,
                 CreatedAt = command.CreatedAt,
-                FileContent = command.FileContent,
+                FileContent = fileContentBytes,
                 UserId = userId,
                 User = user,
                 Status = "In Progress",
@@ -65,7 +66,7 @@ namespace Application.CommandHandlers
                 Title = createdCourse.Title,
                 Subject = createdCourse.Subject,
                 Content = createdCourse.Content,
-                FileContent = createdCourse.FileContent,
+                FileContent = createdCourse.FileContent != null ? Convert.ToBase64String(createdCourse.FileContent) : null,
                 CreatedAt = createdCourse.CreatedAt
             };
 
