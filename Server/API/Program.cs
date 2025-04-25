@@ -45,10 +45,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseCosmos(
         builder.Configuration.GetConnectionString("CosmosDb")!, 
         databaseName: "TeachingPlatforme"));
-
+        
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<IPdfToMarkdownService, PdfToMarkdownService>();
 
 builder.Services.AddAuthentication(options =>
     {
