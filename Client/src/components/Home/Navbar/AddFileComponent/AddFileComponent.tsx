@@ -11,7 +11,7 @@ function AddFileComponent() {
             reader.onload = (e) => {
                 const data = {
                     title: selectedFile.name.split(".")[0],
-                    fileContent: e.target?.result as string,
+                    fileContent: (e.target?.result as string).split(",")[1],
                     createdAt: new Date().toISOString(),
                 }
                 callApi("POST", "Course/add", JSON.stringify(data))
