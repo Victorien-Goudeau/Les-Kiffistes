@@ -24,7 +24,7 @@ namespace Application.CommandHandlers
                 Title = x.Title,
                 Subject = x.Subject,
                 Content = x.Content,
-                FileUrl = x.FileUrl,
+                FileContent = x.FileContent,
                 CreatedAt = x.CreatedAt,
             }).ToList();
         }
