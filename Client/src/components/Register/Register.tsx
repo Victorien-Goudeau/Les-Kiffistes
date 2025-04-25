@@ -35,7 +35,7 @@ function Register() {
             })
             .then((data) => {
                 localStorage.setItem("token", data.token);
-                window.location.href = `/home/${role.toLowerCase()}`;
+                window.location.href = `/home`;
             })
             .catch((error) => {
                 console.error("Error:", error);

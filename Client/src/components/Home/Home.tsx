@@ -1,20 +1,26 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import StudentPage from "./Student/StudentPage";
-import TeacherPage from "./Teacher/TeacherPage";
+import Navbar from "./Navbar/Navbar";
+import Modules from "./Modules/Modules";
+import Body from "./Body/Body";
+
+import "./Home.css";
+import { useEffect } from "react";
 
 function Home() {
-    // const { user } = null;
+    useEffect(() => {
+        const sessionToken = sessionStorage.getItem("token");
+        const localToken = localStorage.getItem("token");
+        if (!sessionToken && !localToken) {
+            window.location.href = "/login";
+        }
+    }, []);
     return (
-        <div>
-            {/* {
-                user!.role === "teacher"
-                    ? <TeacherPage />
-                    : <StudentPage />
-            } */}
+        <div className='student-page'>
+            <Navbar />
             <Routes>
-                <Route path="/" element={<StudentPage />} />
-                <Route path="/student/*" element={<StudentPage />} />
-                <Route path="/teacher/*" element={<TeacherPage />} />
+                <Route path="/modules" element={<Modules />} />
+                <Route path="/profile" element={<Body />} />
+                <Route path="/*" element={<Body />} />
             </Routes>
         </div>
     );

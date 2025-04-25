@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import "./Login.css"
 import { useApi } from "../../customs/useApi";
 
 function Login() {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState(false);
 
     const { callApi } = useApi();
+
+    const rememberMeRef = useRef<HTMLInputElement>(null);
 
     const handleLogin = () => {
         if (login === "" || password === "") {
@@ -25,10 +28,16 @@ function Login() {
                 }
             })
             .then((data) => {
-                localStorage.setItem("token", data.token);
-                window.location.href = "/home/student";
+                setError(false);
+                if (rememberMeRef.current?.checked) {
+                    localStorage.setItem("token", data.token);
+                } else {
+                    sessionStorage.setItem("token", data.token);
+                }
+                window.location.href = "/home";
             })
             .catch((error) => {
+                setError(true);
                 console.error("Error:", error);
             });
     }
@@ -37,13 +46,14 @@ function Login() {
         <div className="login-body">
             <div className="login-form">
                 <h1>Login</h1>
+                {error && <p style={{ position: 'absolute', bottom: '40%', color: 'red' }}>Error : wrong username or password.</p>}
                 <div className="input-container">
                     <input type="text" placeholder="Username" className="login-input" onChange={(e) => setLogin(e.target.value)} />
                     <input type="password" placeholder="Password" className="login-input" onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <div className="options-container">
                     <div className="remember-me-container">
-                        <input type="checkbox" id="remember-me" className="remember-me-checkbox" />
+                        <input ref={rememberMeRef} type="checkbox" id="remember-me" className="remember-me-checkbox" />
                         <label htmlFor="remember-me" className="remember-me-label">Remember Me</label>
                     </div>
                     <a href="#" className="forgot-password">Forgot Password?</a>

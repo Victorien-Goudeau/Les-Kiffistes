@@ -47,8 +47,5 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-}
-
-.with-button {
-    width: 20%;
+    gap: 75px;
 }
