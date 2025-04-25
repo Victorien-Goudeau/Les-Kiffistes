@@ -24,7 +24,7 @@ function AddFileComponent() {
                     })
                     .then((data) => {
                         console.log("File uploaded successfully:", data);
-                        window.location.reload();
+                        event.target.value = "";
                     })
                     .catch((error) => {
                         console.error("Error:", error);
