@@ -1,7 +1,10 @@
 export function useApi() {
 
     const callApi = async (method: string, route: string, body?: string | null) => {
-        const token = localStorage.getItem("token") || null;
+        let token = localStorage.getItem("token") || null;
+        if (token == null) {
+            token = sessionStorage.getItem("token") || null;
+        }
         const options: RequestInit = {
             method: method,
             headers: {
