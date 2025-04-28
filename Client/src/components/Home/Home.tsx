@@ -5,6 +5,7 @@ import Body from "./Body/Body";
 
 import "./Home.css";
 import { useEffect } from "react";
+import Evaluation from "./Modules/Evaluation/Evaluation";
 
 function Home() {
     useEffect(() => {
@@ -21,7 +22,8 @@ function Home() {
         <div className='student-page'>
             <Navbar />
             <Routes>
-                <Route path="/modules" element={<Modules />} />
+                <Route path="/modules/*" element={<Modules />} />
+                <Route path="eval" element={<Evaluation />} />
                 <Route path="/profile" element={<Body />} />
                 <Route path="/*" element={<Body />} />
             </Routes>

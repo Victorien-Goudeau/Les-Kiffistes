@@ -32,12 +32,22 @@
         justify-content: center;
         width: 150px;
         padding: 20px;
-        margin-top: 50px;
         border-radius: 5px;
         background-color: #6facbd;
         color: #fff;
         cursor: pointer;
+
+        &:hover {
+            background-color: #41675f;
+        }
     }
+}
+
+.eval-link {
+    width: fit-content;
+    height: fit-content;
+    margin-top: 50px;
+    text-decoration: none;
 }
 
 
