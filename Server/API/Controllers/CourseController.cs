@@ -90,5 +90,29 @@ namespace API.Controllers
                 return BadRequest(new { error = "Unknown error." });
             }
         }
+
+        [Authorize]
+        [HttpGet("{courseId}/modules")]
+        public async Task<ActionResult<List<AIModuleDto>>> GetModulesByCourseId(string courseId)
+        {
+            try
+            {
+                var query = new GetCourseModulesQuery(){CourseId = courseId};
+                var modules = await _mediator.Send(query);
+                return Ok(modules);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized(new { error = "Invalid credentials." });
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(new { error = e.Message });
+            }
+            catch
+            {
+                return BadRequest(new { error = "Unknown error." });
+            }
+        }
     }
 }
