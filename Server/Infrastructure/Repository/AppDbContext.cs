@@ -39,6 +39,10 @@ namespace Infrastructure.Repository
                 .WithOne(m => m.Course)
                 .HasForeignKey(m => m.CourseId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+                b.Property(b => b.Status).HasConversion(
+                    s => s.ToString(),
+                    s => (Status)Enum.Parse(typeof(Status), s));
             });
 
             modelBuilder.Entity<AIModule>(b =>
@@ -52,6 +56,10 @@ namespace Infrastructure.Repository
                 .WithOne(q => q.AIModule)
                 .HasForeignKey<Quiz>(q => q.AIModuleId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+                b.Property(b => b.Status).HasConversion(
+                    s => s.ToString(),
+                    s => (Status)Enum.Parse(typeof(Status), s));
             });
 
             modelBuilder.Entity<Quiz>(b =>
@@ -69,6 +77,10 @@ namespace Infrastructure.Repository
                 .WithOne(qt => qt.Quiz)
                 .HasForeignKey(qt => qt.QuizId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+                b.Property(q => q.Status).HasConversion(
+                    s => s.ToString(),
+                    s => s != null ? (Status)Enum.Parse(typeof(Status), s) : default);
             });
 
             modelBuilder.Entity<Question>(b =>
@@ -77,6 +89,9 @@ namespace Infrastructure.Repository
                 b.HasKey(q => q.Id);
                 b.Property(q => q.Id).ToJsonProperty("id");
                 b.HasPartitionKey(q => q.QuizId);
+                b.Property(q => q.Type).HasConversion(
+                    qt => qt.ToString(),
+                    qt => (QuestionType)Enum.Parse(typeof(QuestionType), qt));
             });
         }
     }
