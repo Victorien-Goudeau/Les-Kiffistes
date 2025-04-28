@@ -54,7 +54,7 @@ namespace Application.CommandHandlers
                 FileContent = fileContentBytes,
                 UserId = userId,
                 User = user,
-                Status = "In Progress",
+                Status = Status.InProgress,
             };
 
             var createdCourse = await _courseRepository.CreateCourse(course);

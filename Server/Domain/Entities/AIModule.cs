@@ -10,7 +10,7 @@ namespace Domain.Entities
         public required Course Course { get; set; }
         public required string QuizId { get; set; }
         public required Quiz Quiz { get; set; }
-        public required string Status { get; set; } // "In Progress" or "Finished"
+        public required Status Status { get; set; } // "In Progress" or "Finished"
         public required int Level { get; set; } // Order in the course
         public DateTimeOffset CreatedAt { get; set; }
         public string? Title { get; set; }

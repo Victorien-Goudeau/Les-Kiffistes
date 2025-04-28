@@ -8,7 +8,7 @@ namespace Domain.Entities
         public required string Id { get; set; }
         public required string UserId { get; set; }
         public required User User { get; set; }
-        public required string Status { get; set; } // "In Progress", "Failed" or "Finished"
+        public required Status Status { get; set; } // "In Progress", "Failed" or "Finished"
         public string? Title { get; set; }
         public string? Subject { get; set; }
         public string? Content { get; set; }

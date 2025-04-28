@@ -12,7 +12,7 @@ namespace Domain.Entities
         public AIModule? AIModule { get; set; }
         public DateTimeOffset GeneratedAt { get; set; }
         public string? Title { get; set; }
-        public string? Status { get; set; } // "Pending", "In Progress", "Failed" or "Succeeded"
+        public Status? Status { get; set; } // "Pending", "In Progress", "Failed" or "Succeeded"
         public float? Result { get; set; }
         public List<Question> Questions { get; set; } = new();
     }
