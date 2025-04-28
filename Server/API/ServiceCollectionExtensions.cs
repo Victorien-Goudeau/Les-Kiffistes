@@ -8,6 +8,11 @@ using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Application.Services;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+using System.Reflection.PortableExecutable;
+using System.Configuration;
 
 namespace API
 {
@@ -31,10 +36,10 @@ namespace API
 
                 opts.AddSecurityDefinition("Auth", new OpenApiSecurityScheme
                 {
-                    Name        = "Authorization",
-                    In          = ParameterLocation.Header,
-                    Type        = SecuritySchemeType.Http,
-                    Scheme      = JwtBearerDefaults.AuthenticationScheme,
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = JwtBearerDefaults.AuthenticationScheme,
                     Description = "Enter your JWT token her"
                 });
                 opts.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -98,21 +103,21 @@ namespace API
             services.AddAuthentication(opts =>
                 {
                     opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    opts.DefaultChallengeScheme    = JwtBearerDefaults.AuthenticationScheme;
+                    opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(opts =>
                 {
                     opts.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer           = true,
-                        ValidIssuer              = configuration["Jwt:Issuer"],
-                        ValidateAudience         = true,
-                        ValidAudience            = configuration["Jwt:Audience"],
+                        ValidateIssuer = true,
+                        ValidIssuer = configuration["Jwt:Issuer"],
+                        ValidateAudience = true,
+                        ValidAudience = configuration["Jwt:Audience"],
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey         = new SymmetricSecurityKey(
+                        IssuerSigningKey = new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)),
                         ValidateLifetime = true,
-                        ClockSkew        = TimeSpan.FromMinutes(1)
+                        ClockSkew = TimeSpan.FromMinutes(1)
                     };
                 });
 
@@ -127,10 +132,10 @@ namespace API
         {
             services.AddHttpLogging(opts =>
             {
-                opts.LoggingFields        = HttpLoggingFields.None;
-                opts.RequestBodyLogLimit  = 4096;
+                opts.LoggingFields = HttpLoggingFields.None;
+                opts.RequestBodyLogLimit = 4096;
                 opts.ResponseBodyLogLimit = 4096;
-                opts.CombineLogs          = true;
+                opts.CombineLogs = true;
             });
 
             return services;
@@ -152,6 +157,33 @@ namespace API
                         .AllowAnyHeader()
                         .AllowCredentials();
                 });
+            });
+
+            return services;
+        }
+
+        // public static IServiceCollection AddLearningWorkflowOrchestrator(
+        //     this IServiceCollection services)
+        // {
+        //     services.AddSingleton<LearningWorkflowOrchestrator>();
+        //     return services;
+        // }
+
+        public static IServiceCollection AddSemanticKernel(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.AddSingleton<Kernel>(sp =>
+            {
+                Kernel kernel;
+
+                var builder = Kernel.CreateBuilder();
+                builder.AddAzureOpenAIChatCompletion("o3-mini", configuration["Model:Endpoint"]!, configuration["Model:ApiKey"]!);
+                builder.Plugins.AddFromType<LearningWorkflowOrchestrator>();
+
+                kernel = builder.Build();
+
+                return kernel;
             });
 
             return services;
