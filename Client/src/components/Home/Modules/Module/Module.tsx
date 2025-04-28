@@ -1,12 +1,17 @@
 import ReactMarkdown from "react-markdown";
 import "./Module.css";
 import { useEffect, useState } from "react";
-import { Link, Outlet, Route, Routes } from "react-router-dom";
+import { Link, Outlet, Route, Routes, useParams } from "react-router-dom";
+import { useApi } from "../../../../customs/useApi";
 
 function Module() {
     const [markdownContent, setMarkdownContent] = useState<string>("");
+    const { id } = useParams<{ id: string }>();
+
+    const { callApi } = useApi();
 
     useEffect(() => {
+        callApi("GET", "modules")
         fetch("/README.md")
             .then((response) => response.text())
             .then((text) => setMarkdownContent(text))

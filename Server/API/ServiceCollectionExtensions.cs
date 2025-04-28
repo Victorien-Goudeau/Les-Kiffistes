@@ -170,6 +170,25 @@ namespace API
         //     services.AddSingleton<LearningWorkflowOrchestrator>();
         //     return services;
         // }
-        
+
+        // public static IServiceCollection AddSemanticKernel(
+        //     this IServiceCollection services,
+        //     IConfiguration configuration)
+        // {
+        //     services.AddSingleton<Kernel>(sp =>
+        //     {
+        //         Kernel kernel;
+
+        //         var builder = Kernel.CreateBuilder();
+        //         builder.AddAzureOpenAIChatCompletion("o3-mini", configuration["Model:Endpoint"]!, configuration["Model:ApiKey"]!);
+        //         builder.Plugins.AddFromType<LearningWorkflowOrchestrator>();
+
+        //         kernel = builder.Build();
+
+        //         return kernel;
+        //     });
+
+        //     return services;
+        // }
     }
 }
