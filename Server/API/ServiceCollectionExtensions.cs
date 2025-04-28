@@ -87,6 +87,8 @@ namespace API
             services.AddHttpContextAccessor();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddScoped<IAIModuleRepository, AIModuleRepository>();
+            services.AddScoped<IQuizRepository, QuizRepository>();
             services.AddScoped<IJwtTokenService, JwtTokenService>();
             services.AddScoped<IPdfToMarkdownService, PdfToMarkdownService>();
 
