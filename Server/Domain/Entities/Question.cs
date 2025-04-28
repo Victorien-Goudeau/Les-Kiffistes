@@ -11,7 +11,7 @@ namespace Domain.Entities
         public required Quiz Quiz { get; set; }
         public DateTimeOffset GeneratedAt { get; set; }
         public required QuestionType Type { get; set; } // "Checkbox", "Multiple Choice" or "Open"
-        public List<string> CorrectAnswers { get; set; } = new();
-        public List<string> Choices { get; set; } = new();
+        public string CorrectAnswers { get; set; }
+        public string Choices { get; set; }
     }
 }
