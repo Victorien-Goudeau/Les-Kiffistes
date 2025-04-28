@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Application.Dtos;
 using System.Security.Claims;
 using Application.Queries;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Application.Commands;
 
 namespace API.Controllers
@@ -19,6 +18,7 @@ namespace API.Controllers
         {
             _mediator = mediator;
         }
+
         [Authorize]
         [HttpGet("all")]
         public async Task<ActionResult<List<CourseDto>>> GetAllCourses()
@@ -43,6 +43,7 @@ namespace API.Controllers
                 return BadRequest(new { error = "Unknown error." });
             }
         }
+
         [Authorize]
         [HttpPost("add")]
         public async Task<ActionResult<List<CourseDto>>> CreateNewCourse([FromBody] CreateCourseCommand createCourseCommand)
@@ -51,6 +52,30 @@ namespace API.Controllers
             {
                 var Course = await _mediator.Send(createCourseCommand);
                 return Ok(Course);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized(new { error = "Invalid credentials." });
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(new { error = e.Message });
+            }
+            catch
+            {
+                return BadRequest(new { error = "Unknown error." });
+            }
+        }
+
+        [Authorize]
+        [HttpGet("{courseId}/quiz")]
+        public async Task<ActionResult<List<QuizDto>>> GetQuizByCourseId(string courseId)
+        {
+            try
+            {
+                var query = new GetCourseQuizQuery(){CourseId = courseId};
+                var quiz = await _mediator.Send(query);
+                return Ok(quiz);
             }
             catch (UnauthorizedAccessException)
             {
