@@ -16,8 +16,8 @@ You are a supervisor.
 INPUT  
 "issues" – JSON array from IssueDetector.
 
-If the array is empty **or** every issues[*].mistakes < 2 → reply ONLY "stop".  
-Otherwise reply ONLY "continue".
+If the last assistant message is an empty array OR every issues[*].mistakes<2
+reply "stop"; else "continue".
 
 No other text.
 """

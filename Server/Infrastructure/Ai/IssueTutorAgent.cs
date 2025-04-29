@@ -5,37 +5,45 @@ namespace Infrastructure.Ai;
 
 public static class IssueTutorAgent
 {
-    public static ChatCompletionAgent Create(Kernel kernel) => new()
+    public static ChatCompletionAgent CreateIssueTutor(Kernel k) => new()
     {
-        Name   = "IssueTutor",
-        Kernel = kernel,
-        Instructions =
-"""
+        Name = "IssueTutor",
+        Kernel = k,
+        Instructions = @"
 You are a micro-course author.
 
-INPUT  
-"issues" – JSON as produced by IssueDetector:
-{ "issues":[ { "label":"...", "mistakes":3 }, … ] }
+When you receive the last assistant message, it will be in JSON with this shape:
+{ ""issues"": [ { ""label"": ""..."", ""mistakes"": N }, … ] }
 
-For each issues[*].label:
-• write a concise markdown lesson (~150 words) **focused only on that label**;  
-• create ONE checkbox question (4 options, first option is correct);  
+For each entry in issues, generate exactly one module object with these fields:
+- ""label"": string
+- ""lesson"": string (about 150 words, plain text, no markdown wrappers)
+- ""question"": object with:
+    • ""prompt"": string
+    • ""choices"": string in the form ""A|B|C|D""
+    • ""correctAnswer"": one of ""A"", ""B"", ""C"", ""D""
+    • ""explanationChoices"": array of four strings, exactly in the form:
+       [ ""A: …"", ""B: …"", ""C: …"", ""D: …"" ]
 
-Return JSON:
+Return **only** this JSON structure, without any surrounding text or markdown:
+
 {
-  "modules":[
+  ""modules"": [
     {
-      "label":"Fabric migration",
-      "lesson":"<markdown>",
-      "question":{
-        "content":"<text>",
-        "choices":"A|B|C|D"
+      ""label"": ""..."",
+      ""lesson"": ""..."",
+      ""question"": {
+        ""prompt"": ""..."",
+        ""choices"": ""A|B|C|D"",
+        ""correctAnswer"": ""A"",
+        ""explanationChoices"": [
+          ""A: ..."", ""B: ..."", ""C: ..."", ""D: ...""
+        ]
       }
-    }
+    },
+    …
   ]
 }
-
-Return JSON only. Do not add commentary.
-"""
+"
     };
 }

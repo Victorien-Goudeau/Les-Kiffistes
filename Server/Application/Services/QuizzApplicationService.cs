@@ -38,7 +38,7 @@ public sealed class QuizApplicationService
             GeneratedAt = DateTimeOffset.UtcNow,
             Questions = quizDto.Questions.Select(q => new Question
             {
-                Id = q.Id,
+                Id = Guid.NewGuid().ToString(),
                 QuizId = quizDto.Id,
                 
                 Content = q.Content,
@@ -54,6 +54,21 @@ public sealed class QuizApplicationService
         await _courses.UpdateCourse(course);
 
         return quiz;
+    }
+
+    public async Task<double> SubmitQuizAsync(SubmitQuizDto submission, CancellationToken ct)
+    {
+        var quizLength = submission.Questions.Count;
+        //Récupérer le résultat du quiz par rapport au nombre de true par rapport à le nombre de questions
+        var correctAnswers = submission.Questions.Count(q => q.IsUserAnswerCorrectly);
+        var score = (double)correctAnswers / quizLength * 100;
+        foreach (var question in submission.Questions)
+        {
+
+            await _quizzes.UpdateQuestion(question.Id, question.IsUserAnswerCorrectly);
+        }
+
+        return score;
     }
 
     public static class DtoMapper

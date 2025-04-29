@@ -15,7 +15,7 @@ public static class SemanticKernelService
             var builder = Kernel.CreateBuilder();
 
             builder.AddAzureOpenAIChatCompletion(
-                deploymentName: "o3-mini",          // required
+                deploymentName: "gpt-4o",          // required
                 endpoint:       "https://aigenstudio6832366256.openai.azure.com/",            // required
                 apiKey:         "0d87619f35064fd9a6f6125d6c1bff57");             // or DefaultAzureCredential
 

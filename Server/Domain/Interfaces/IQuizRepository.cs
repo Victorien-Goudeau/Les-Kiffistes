@@ -8,5 +8,6 @@ namespace Domain.Interfaces
         Task<Quiz?> GetQuizByCourseId(string id);
         Task<bool> DeleteQuiz(Quiz quiz);
         Task<List<Question>?> GetQuizById(string id);
+        Task<Question> UpdateQuestion(string questionId, bool isCorrect);
     }
 }

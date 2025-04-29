@@ -1,108 +1,101 @@
+/* Evaluation.css - CSS pur, sans nesting */
 .evaluation-module {
     width: 100vw;
-    height: 100%;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: #effffe;
+    color: #000;
+}
 
-    color: #fff;
-
-    h1 {
-        color: #000;
-    }
+.evaluation-module h1 {
+    margin: 20px 0;
+    color: #000;
 }
 
 .question-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-
+    justify-content: flex-start;
     width: 60%;
     max-width: 900px;
     padding: 20px;
-    box-sizing: border-box;
-
+    margin-bottom: 40px;
     background-color: #41675f;
-
     border-radius: 10px;
 }
 
+.question-container-header h2 {
+    margin: 0 0 12px;
+    font-size: 1.4rem;
+    color: #fff;
+}
+
 .question-container-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
     width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
+    padding: 10px 0;
+    font-size: 1.2rem;
+    color: #fff;
+}
 
-    font-size: 20px;
+.question-container-body p {
+    margin: 0 0 20px;
 }
 
 .responses-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-
-    gap: 20px;
-
-    padding: 10px;
-    box-sizing: border-box;
+    gap: 15px;
+    width: 100%;
 }
 
 .response-option {
     display: flex;
-    flex-direction: row;
     align-items: center;
     gap: 10px;
-
-    width: 90%;
+    padding: 8px;
+    background: rgba(255,255,255,0.1);
     border-radius: 5px;
-
-    color: #fff;
-
     cursor: pointer;
 }
 
 .option-label {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    font-size: 17px;
+    flex: 1;
+    font-size: 1rem;
     color: #fff;
-
-    cursor: pointer;
 }
 
 input[type="radio"] {
-    transform: scale(1.5);
-    margin-right: 10px;
+    transform: scale(1.3);
     cursor: pointer;
 }
 
 input[type="radio"]:hover {
-    transform: scale(2);
+    transform: scale(1.6);
 }
 
 .question-container-footer {
     width: 100%;
     margin-top: 20px;
-    padding: 10px;
-    box-sizing: border-box;
+    text-align: center;
+}
 
-    button {
-        all: unset;
-        cursor: pointer;
+.question-container-footer button,
+.evaluation-module .submit-button {
+    all: unset;
+    display: inline-block;
+    padding: 10px 24px;
+    border-radius: 5px;
+    background-color: #6facbd;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
 
-        width: 120px;
-        height: 40px;
-        border-radius: 5px;
-        background-color: #6facbd;
-
-        &:hover {
-            background-color: #7cbfd1;
-        }
-    }
+.question-container-footer button:hover,
+.evaluation-module .submit-button:hover {
+    background-color: #7cbfd1;
 }

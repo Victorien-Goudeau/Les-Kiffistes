@@ -2,39 +2,88 @@ using API;
 using Application.Interfaces;
 using Application.Services;
 using Infrastructure.Ai;
+using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Agents;
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ---------------------------------------------------------------------------
+// 1. Présentation, Auth, CORS, Swagger
+// ---------------------------------------------------------------------------
 builder.Services.AddPresentationServices();
+builder.Services.AddAuthenticationServices(builder.Configuration);
+builder.Services.AddCorsServices();
+builder.Services.AddHttpLoggingServices();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
+// ---------------------------------------------------------------------------
+// 2. Application & Infrastructure
+// ---------------------------------------------------------------------------
 builder.Services.AddApplicationServices();
-
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
-builder.Services.AddAuthenticationServices(builder.Configuration);
-
-builder.Services.AddHttpLoggingServices();
-
-builder.Services.AddCorsServices();
-
-builder.Services.AddScoped<IQuizGenerationService, QuizGenerationService>();
+// Services AI « simples »
+builder.Services.AddScoped<IQuizGenerationService,     QuizGenerationService>();
 builder.Services.AddScoped<IWeakTopicDetectionService, WeakTopicDetectionService>();
-builder.Services.AddScoped<IRemediationService, RemediationService>();
+builder.Services.AddScoped<IRemediationService,        RemediationService>();
 
+// Services orchestrateurs
 builder.Services.AddScoped<QuizApplicationService>();
 builder.Services.AddScoped<RemediationApplicationService>();
+builder.Services.AddScoped<RemediationLoopService>();
 
-builder.Services.AddSingleton(sp =>
+// ---------------------------------------------------------------------------
+// 3. Kernel + Logging
+// ---------------------------------------------------------------------------
+// LoggerFactory que l’on réutilise pour SK et ASP.NET :
+var loggerFactory = LoggerFactory.Create(b =>
 {
-    var kb = Kernel.CreateBuilder();                                   // create the builder  :contentReference[oaicite:0]{index=0}
-    kb.AddAzureOpenAIChatCompletion(
-        deploymentName: "o3-mini",          // required
-        endpoint:       "https://aigenstudio6832366256.openai.azure.com/",            // required
-        apiKey:         "0d87619f35064fd9a6f6125d6c1bff57");                         // user-secrets / KeyVault
-    return kb.Build();                                                 // singleton Kernel   :contentReference[oaicite:1]{index=1}
+    b.AddConsole();
+    b.AddDebug();
+    b.SetMinimumLevel(LogLevel.Information);
+});
+builder.Logging.ClearProviders();
+builder.Logging.AddProvider(new LoggerFactoryAdapter(loggerFactory));
+
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.AddConsole();
+    loggingBuilder.SetMinimumLevel(LogLevel.Information);
 });
 
+// Ajoutez le Kernel au conteneur de services
+builder.Services.AddSingleton<Kernel>(sp =>
+{
+    var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
+
+    var kernelBuilder = Kernel.CreateBuilder();
+    kernelBuilder.Services.AddSingleton(loggerFactory); // Injectez le LoggerFactory
+    kernelBuilder.AddAzureOpenAIChatCompletion(
+            deploymentName: "gpt-4o",          // required
+            endpoint:       "https://aigenstudio6832366256.openai.azure.com/",            // required
+            apiKey:         "0d87619f35064fd9a6f6125d6c1bff57" 
+    );
+
+    return kernelBuilder.Build();
+});
+
+// ---------------------------------------------------------------------------
+// 4. AgentGroupChat (orchestration multi-agents)
+// ---------------------------------------------------------------------------
+#pragma warning disable SKEXP0110
+builder.Services.AddSingleton<AgentGroupChat>(sp =>
+#pragma warning restore SKEXP0110
+{
+    var kernel = sp.GetRequiredService<Kernel>();
+    return AgentOrchestration.Build(kernel);       // crée IssueDetector, IssueTutor, Coach
+});
+
+// ---------------------------------------------------------------------------
+// 5. Pipeline HTTP
+// ---------------------------------------------------------------------------
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -43,18 +92,23 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowOrigin");
-
 app.UseHttpsRedirection();
-
+app.UseCors("AllowOrigin");
 app.UseHttpLogging();
-
 app.UseAuthentication();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.UseHsts();
 
 app.Run();
+
+// ---------------------------------------------------------------------------
+// 6. Implémentation d’adaptateur Logger pour ASP.NET (optionnel)
+// ---------------------------------------------------------------------------
+public sealed class LoggerFactoryAdapter : ILoggerProvider
+{
+    private readonly ILoggerFactory _factory;
+    public LoggerFactoryAdapter(ILoggerFactory factory) => _factory = factory;
+    public ILogger CreateLogger(string categoryName) => _factory.CreateLogger(categoryName);
+    public void Dispose() { }
+}

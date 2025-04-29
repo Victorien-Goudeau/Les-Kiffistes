@@ -1,26 +1,36 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using Application.Dtos;
 using Microsoft.SemanticKernel.Agents.Chat;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
-using Domain.Interfaces;            // pour ChatHistoryExtensions
+using Domain.Interfaces;
+using Microsoft.Extensions.Logging; // pour ChatHistoryExtensions
 
 namespace Application.Services;
 
 public sealed class RemediationLoopService
 {
+#pragma warning disable SKEXP0110
     private readonly AgentGroupChat _chat;
+#pragma warning restore SKEXP0110
     private readonly JsonSerializerOptions _json = new(JsonSerializerDefaults.Web);
     private readonly IQuizRepository _quizzes;
+    private readonly ILogger<RemediationLoopService> _logger;
 
-    public RemediationLoopService(AgentGroupChat chat, IQuizRepository quizzes)
+#pragma warning disable SKEXP0110
+    public RemediationLoopService(AgentGroupChat chat, IQuizRepository quizzes,
+        ILogger<RemediationLoopService> logger)
+#pragma warning restore SKEXP0110
     {
         _chat = chat;
         _quizzes = quizzes;
+        _logger = logger;
     }
 
     /// <returns>Le JSON « modules » produit par IssueTutor.</returns>
+    [Experimental("SKEXP0001")]
     public async Task<string> RunAsync(
         string quizId,
         CancellationToken ct = default)
@@ -53,12 +63,13 @@ public sealed class RemediationLoopService
 
         await foreach (var msg in _chat.InvokeAsync(ct))
         {
-            // On mémorise le dernier message émis par IssueTutor
-#pragma warning disable SKEXP0001 // Le type est utilisé à des fins d’évaluation uniquement et est susceptible d’être modifié ou supprimé dans les futures mises à jour. Supprimez ce diagnostic pour continuer.
-            if (msg.AuthorName == "IssueTutor")
+            _logger.LogInformation("[{Agent}] {Content}",
+                msg.AuthorName, msg.Content);   // trace lisible
+
+            if (msg.AuthorName.Equals("IssueTutor", StringComparison.OrdinalIgnoreCase))
                 tutorMessage = msg;
-#pragma warning restore SKEXP0001 // Le type est utilisé à des fins d’évaluation uniquement et est susceptible d’être modifié ou supprimé dans les futures mises à jour. Supprimez ce diagnostic pour continuer.
         }
+
 
         // La boucle s’arrête parce que la TerminationStrategy a détecté "stop"
         return tutorMessage?.Content

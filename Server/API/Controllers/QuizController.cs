@@ -73,4 +73,45 @@ public sealed class QuizController : ControllerBase
             return BadRequest(new { error = "Unknown error." });
         }
     }
+    
+    /// <summary>
+    /// Soumet les réponses de l'utilisateur pour un quiz donné.
+    /// </summary>
+    [HttpPost("{quizId}/submit")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> SubmitAsync(
+        string quizId,
+        [FromBody] SubmitQuizDto payload,
+        CancellationToken ct)
+    {
+        if (payload == null || payload.Questions == null || !payload.Questions.Any())
+        {
+            return BadRequest("Le payload est invalide ou ne contient aucune question.");
+        }
+
+        try
+        {
+            // Appel au service d'application pour traiter la soumission
+            var result = await _quizService.SubmitQuizAsync(payload, ct);
+            // result peut contenir, par exemple, nombre de bonnes réponses, score, ...
+            return Ok(result);
+        }
+        catch (KeyNotFoundException e)
+        {
+            // Quiz non trouvé
+            return NotFound(new { error = e.Message });
+        }
+        catch (InvalidOperationException e)
+        {
+            // Erreur métier (ex. quiz déjà soumis, clos, etc.)
+            return BadRequest(new { error = e.Message });
+        }
+        catch (Exception e)
+        {
+            // Erreur inattendue
+            Console.Error.WriteLine($"Erreur lors de la soumission du quiz : {e}");
+            return StatusCode(StatusCodes.Status500InternalServerError, new { error = "Erreur serveur." });
+        }
+    }
 }

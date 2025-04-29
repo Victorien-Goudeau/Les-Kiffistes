@@ -1,0 +1,82 @@
+/* wrapper général */
+.remediation-modules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    width: 90%;
+    margin: 0 auto 40px;
+    padding-top: 20px;
+}
+
+/* carte par module */
+.remediation-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s;
+}
+
+.remediation-card:hover {
+    transform: translateY(-4px);
+}
+
+/* titre du module */
+.remediation-label {
+    margin: 0 0 12px;
+    font-size: 1.5rem;
+    color: #333333;
+}
+
+/* leçon (HTML autorisé pour listes) */
+.remediation-lesson {
+    margin: 0 0 16px;
+    font-size: 1rem;
+    color: #444444;
+    line-height: 1.5;
+}
+
+/* question */
+.remediation-question h3 {
+    margin: 0 0 12px;
+    font-size: 1.2rem;
+    color: #222222;
+}
+
+/* conteneur des choix */
+.remediation-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* style de base des boutons */
+.choice-button {
+    flex: 1 1 48%;
+    padding: 10px;
+    border: 2px solid #6facbd;
+    background: #ffffff;
+    color: #333333;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+/* hover tant qu'on n'a pas répondu */
+.choice-button:hover {
+    background: #f0faff;
+}
+
+/* état correct */
+.choice-button.correct {
+    background: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+/* état wrong */
+.choice-button.wrong {
+    background: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+}

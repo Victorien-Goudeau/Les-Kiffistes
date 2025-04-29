@@ -37,6 +37,17 @@ namespace Infrastructure.Repository
                 return null;
             }
         }
+        
+        public async Task<Question> UpdateQuestion(string questionId, bool isCorrect)
+        {
+            var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == questionId);
+            if (question == null) throw new KeyNotFoundException("Question not found.");
+
+            question.isUserAnswerCorrectly = isCorrect;
+            _context.Questions.Update(question);
+            await _context.SaveChangesAsync();
+            return question;
+        }
 
         public async Task<List<Question>?> GetQuizById(string id)
         {
