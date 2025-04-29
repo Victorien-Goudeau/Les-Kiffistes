@@ -40,6 +40,7 @@ public sealed class QuizApplicationService
             {
                 Id = q.Id,
                 QuizId = quizDto.Id,
+                
                 Content = q.Content,
                 Type = q.Type,
                 Choices = q.Choices,

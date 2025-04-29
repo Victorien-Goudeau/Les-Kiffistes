@@ -23,7 +23,7 @@ function Home() {
             <Navbar />
             <Routes>
                 <Route path="/modules/:id/*" element={<Modules />} />
-                <Route path="/eval/:id" element={<Evaluation />} />
+                <Route path="/eval/:id/*" element={<Evaluation />} />
                 <Route path="/profile" element={<Body />} />
                 <Route path="/*" element={<Body />} />
             </Routes>

@@ -12,5 +12,6 @@ namespace Domain.Entities
         public required QuestionType Type { get; set; } // "Checkbox", "Multiple Choice" or "Open"
         public required string CorrectAnswers { get; set; }
         public required string Choices { get; set; }
+        public bool? isUserAnswerCorrectly { get; set; } // true or false if the user answered correctly
     }
 }

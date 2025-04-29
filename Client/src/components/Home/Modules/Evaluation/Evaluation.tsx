@@ -1,12 +1,26 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./Evaluation.css";
 import { useApi } from "../../../../customs/useApi";
 import { useParams } from "react-router-dom";
 
+interface Question {
+    id: string;
+    question: string;
+    options: string[];
+    correctAnswer: string;
+}
+
+interface Quiz {
+    id: string;
+    title: string;
+    questions: Question[];
+}
+
 function Evaluation() {
-    console.log("apagnan");
     const { callApi } = useApi();
     const { id } = useParams<{ id: string }>();
+
+    const [quiz, setQuiz] = useState<Quiz | null>(null);
 
     useEffect(() => {
         console.log("ID:", id);
@@ -14,6 +28,7 @@ function Evaluation() {
             return response.json();
         }).then((data) => {
             console.log(data);
+            setQuiz(data);
         });
     }, []);
 

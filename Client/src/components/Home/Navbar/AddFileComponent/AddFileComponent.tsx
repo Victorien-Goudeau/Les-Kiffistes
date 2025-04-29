@@ -3,6 +3,7 @@ import { useApi } from "../../../../customs/useApi";
 function AddFileComponent() {
     const { callApi } = useApi();
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("File selected:", event.target.files);
         const selectedFile = event.target.files?.[0];
 
         if (selectedFile) {
@@ -23,7 +24,6 @@ function AddFileComponent() {
                     })
                     .then((data) => {
                         console.log("File uploaded successfully:", data);
-                        // event.target.files = null; // Clear the file input
                         console.log("ID ouaiche :", data.id);
 
                         callApi("POST", "quiz", JSON.stringify(data.id)).then((response) => {
@@ -35,7 +35,8 @@ function AddFileComponent() {
                         })
                             .then((data) => {
                                 console.log("Quiz created successfully:", data);
-                                window.location.href = `/home/modules/eval/${data.id}`;
+                                event.target.files = null; // Clear the file input
+                                window.location.href = `/home/eval/${data.courseId}`;
                             });
 
                     })

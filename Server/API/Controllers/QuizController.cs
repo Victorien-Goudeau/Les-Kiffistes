@@ -66,10 +66,12 @@ public sealed class QuizController : ControllerBase
         }
         catch (InvalidOperationException e)
         {
+            Console.WriteLine("Error in getting quiz : " + e.Message);
             return BadRequest(new { error = e.Message });
         }
-        catch
+        catch (Exception e)
         {
+            Console.WriteLine("Error in getting quiz : " + e.Message);
             return BadRequest(new { error = "Unknown error." });
         }
     }

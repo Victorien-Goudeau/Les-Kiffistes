@@ -25,7 +25,7 @@ public sealed class RemediationApplicationService
         var quiz = await _quizzes.GetQuizById(quizId);
         var questionsDto = new List<QuestionDto>();
 
-        foreach(var item in quiz)
+        foreach (var item in quiz)
         {
             var dto = new QuestionDto()
             {
@@ -39,17 +39,17 @@ public sealed class RemediationApplicationService
 
             questionsDto.Add(dto);
         }
-       
+
         var weak = await _detector.DetectWeakTopicsAsync(questionsDto, ct);
 
         var remediationJson = await _remediator.BuildRemediationAsync(weak, ct);
 
         var remediationCourse = new CourseDto
         {
-            Id        = Guid.NewGuid().ToString(),
-            Status    = Status.InProgress,
-            Title     = "Remediation for " + quiz,
-            Content   = remediationJson,
+            Id = Guid.NewGuid().ToString(),
+            Status = Status.InProgress,
+            Title = "Remediation for " + quiz,
+            Content = remediationJson,
             CreatedAt = DateTimeOffset.UtcNow
         };
 

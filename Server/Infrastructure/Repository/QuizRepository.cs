@@ -22,9 +22,20 @@ namespace Infrastructure.Repository
 
         public async Task<Quiz?> GetQuizByCourseId(string id)
         {
-            return await _context.Quizzes
-                .Include(q => q.Questions)
-                .FirstOrDefaultAsync(q => q.CourseId == id);
+            try
+            {
+                var quiz = await _context.Quizzes.FirstOrDefaultAsync(q => q.CourseId == id);
+
+                if (quiz == null) return null;
+
+                quiz.Questions = await _context.Questions.Where(q => q.QuizId == quiz.Id).ToListAsync() ?? new List<Question>();
+                return quiz;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving quiz : {ex.Message}");
+                return null;
+            }
         }
 
         public async Task<List<Question>?> GetQuizById(string id)
