@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import "./Evaluation.css";
 import { useApi } from "../../../../customs/useApi";
 import { useParams } from "react-router-dom";
 
 interface Question {
     id: string;
-    question: string;
-    options: string[];
-    correctAnswer: string;
+    content: string;
+    choices: string;
+    correctAnswers: string;
+    isUserAnswerCorrectly: boolean;
 }
 
 interface Quiz {
@@ -21,55 +22,71 @@ function Evaluation() {
     const { id } = useParams<{ id: string }>();
 
     const [quiz, setQuiz] = useState<Quiz | null>(null);
+    const [questionIndex, setQuestionIndex] = useState(0);
+    const [isQuizFinished, setIsQuizFinished] = useState(false);
+    const [userAnswers, setUserAnswers] = useState<string[]>([]);
 
     useEffect(() => {
         console.log("ID:", id);
         callApi("GET", `quiz/${id}`).then((response) => {
             return response.json();
         }).then((data) => {
-            console.log(data);
+            console.log("Quiz data:", data);
             setQuiz(data);
         });
     }, []);
+
+    const handleNextQuestion = () => {
+        const selectedOption = document.querySelector(`input[name="question${questionIndex}"]:checked`) as HTMLInputElement;
+        if (!selectedOption) {
+            return;
+        }
+        if (selectedOption) {
+            setUserAnswers((prevAnswers) => [...prevAnswers, selectedOption.value]);
+        }
+        setQuiz((prevQuiz) => {
+            if (!prevQuiz) return null;
+            const updatedQuestions = prevQuiz.questions.map((question, index) => {
+                if (index === questionIndex) {
+                    console.log("Selected option:", selectedOption.value);
+                    console.log("Correct answer:", question.correctAnswers);
+                    console.log("Is user answer correct:", selectedOption.value === question.correctAnswers);
+                    return { ...question, isUserAnswerCorrectly: selectedOption.value === question.correctAnswers };
+                }
+                return question;
+            });
+            return { ...prevQuiz, questions: updatedQuestions };
+        });
+        selectedOption.checked = false; // Uncheck the selected option
+        if (questionIndex < quiz!.questions.length - 2) {
+            setQuestionIndex(questionIndex + 1);
+        } else {
+            setIsQuizFinished(true);
+        }
+    };
 
     return (
         <div className="evaluation-module">
             <h1>Evaluation</h1>
             <div className="question-container">
                 <div className="question-container-header">
-                    <h2>Question 1</h2>
+                    <h2>Question {questionIndex + 1}</h2>
                 </div>
                 <div className="question-container-body">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ?</p>
+                    <p>{quiz?.questions[questionIndex].content}</p>
                     <div className="responses-container">
-                        <div className="response-option">
-                            <input type="radio" id="option1" name="question1" value="option1" />
-                            <label htmlFor="option1" className="option-label">Option 1</label>
-                        </div>
-                        <div className="response-option">
-                            <input type="radio" id="option2" name="question1" value="option2" />
-                            <label htmlFor="option2" className="option-label">Option 2</label>
-                        </div>
-                        <div className="response-option">
-                            <input type="radio" id="option3" name="question1" value="option3" />
-                            <label htmlFor="option3" className="option-label">Option 3</label>
-                        </div>
-                        <div className="response-option">
-                            <input type="radio" id="option4" name="question1" value="option4" />
-                            <label htmlFor="option4" className="option-label">Option 4</label>
-                        </div>
-                        <div className="response-option">
-                            <input type="radio" id="option5" name="question1" value="option5" />
-                            <label htmlFor="option5" className="option-label">Option 5</label>
-                        </div>
-                        <div className="response-option">
-                            <input type="radio" id="option6" name="question1" value="option6" />
-                            <label htmlFor="option6" className="option-label">Option 6</label>
-                        </div>
+                        {quiz?.questions[questionIndex].choices.split("|").map((choice, index) => {
+                            return (
+                                <div className="response-option" key={index}>
+                                    <input type="radio" id={`option${index}`} name={`question${questionIndex}`} value={choice} />
+                                    <label htmlFor={`option${index}`} className="option-label">{choice}</label>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
                 <div className="question-container-footer">
-                    <button className="submit-button">Next</button>
+                    <button className="submit-button" onClick={handleNextQuestion}>{isQuizFinished ? 'Finish' : 'Next'}</button>
                 </div>
             </div>
         </div>

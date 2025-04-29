@@ -28,6 +28,18 @@
     border-radius: 10px;
 }
 
+.question-container-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+
+    font-size: 20px;
+}
+
 .responses-container {
     display: flex;
     flex-direction: column;
