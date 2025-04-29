@@ -20,29 +20,27 @@ public sealed class RemediationApplicationService
             (quizzes, detector, remediator, quizGen);
 
     public async Task<(string remediationJson, QuizDto followUpQuiz)> RemediateAsync(
-        string quizId, IDictionary<string,double> scores, CancellationToken ct)
+        string quizId, CancellationToken ct)
     {
-        var quiz = await _quizzes.GetQuizByCourseId(quizId);
-        
-        //map quiz to DTO
-        var quizDto = new QuizDto
-        {
-            Id        = quiz.Id,
-            CourseId  = quiz.CourseId,
-            Title     = quiz.Title,
-            Status    = quiz.Status,
-            Questions = quiz.Questions.Select(q => new QuestionDto
-            {
-                Id      = q.Id,
-                Content = q.Content,
-                Type    = q.Type,
-                Choices = q.Choices
-            }).ToList()
-        };
+        var quiz = await _quizzes.GetQuizById(quizId);
+        var questionsDto = new List<QuestionDto>();
 
-        var weak = await _detector.DetectWeakTopicsAsync(quizDto, scores, ct);
-        if (!weak.Any())
-            return ("{}", quizDto);
+        foreach(var item in quiz)
+        {
+            var dto = new QuestionDto()
+            {
+                Id = item.Id,
+                Answer = item.CorrectAnswers,
+                Choices = item.Choices,
+                Content = item.Content,
+                isUserAnswerCorrectly = item.isUserAnswerCorrectly,
+                Type = item.Type,
+            };
+
+            questionsDto.Add(dto);
+        }
+       
+        var weak = await _detector.DetectWeakTopicsAsync(questionsDto, ct);
 
         var remediationJson = await _remediator.BuildRemediationAsync(weak, ct);
 
@@ -50,7 +48,7 @@ public sealed class RemediationApplicationService
         {
             Id        = Guid.NewGuid().ToString(),
             Status    = Status.InProgress,
-            Title     = "Remediation for " + quiz.Title,
+            Title     = "Remediation for " + quiz,
             Content   = remediationJson,
             CreatedAt = DateTimeOffset.UtcNow
         };

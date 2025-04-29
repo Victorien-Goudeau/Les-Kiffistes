@@ -7,5 +7,6 @@ namespace Application.Dtos
         public required QuestionType Type { get; set; } // "Checkbox", "Multiple Choice" or "Open"
         public string Choices { get; set; } 
         public string Answer { get; set; }
+        public bool? isUserAnswerCorrectly { get; set; }
     }
 }

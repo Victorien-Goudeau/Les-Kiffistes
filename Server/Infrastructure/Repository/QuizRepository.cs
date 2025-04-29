@@ -27,6 +27,11 @@ namespace Infrastructure.Repository
                 .FirstOrDefaultAsync(q => q.CourseId == id);
         }
 
+        public async Task<List<Question>?> GetQuizById(string id)
+        {
+            return await _context.Questions.Where(p => p.QuizId == id).ToListAsync();
+        }
+
         public async Task<bool> DeleteQuiz(Quiz quiz)
         {
             _context.Quizzes.Remove(quiz);

@@ -42,6 +42,7 @@ public sealed class QuizApplicationService
                 Type = q.Type,
                 Choices = q.Choices,
                 CorrectAnswers = q.Answer,
+                isUserAnswerCorrectly = q.isUserAnswerCorrectly,
                 Quiz = null
             }).ToList()
         };

@@ -10,6 +10,7 @@ namespace Infrastructure.Repository
         public DbSet<Course> Courses { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<AIModule> AIModules { get; set; }
+        public DbSet<Question> Questions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(b =>

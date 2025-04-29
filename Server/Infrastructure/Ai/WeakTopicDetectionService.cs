@@ -20,31 +20,53 @@ public sealed class WeakTopicDetectionService : IWeakTopicDetectionService
             Name   = "GapDetector",
             Kernel = kernel,
             Instructions =
-                """
-                You are an evaluator.
+            """
+            You are a learning-analytics evaluator.
 
-                Input "quiz"  : {{$quiz}}
-                Input "scores": {{$scores}}   // JSON { "<questionId>": <0–1> }
+            INPUT  
+            • **answers** – an array of QUESTION objects, each with:  
+              { "id":"<guid>",  
+                "content":"[<theme>] <question text>",  
+                "isUserAnswerCorrectly": <true|false> }
 
-                Return a JSON array of the module titles (strings) where
-                the learner performed poorly (score < 0.6).
-                Return ONLY the JSON array.
-                """
+            TASK  
+            1. From every question, extract the text inside the square brackets – that is the raw *theme*.  
+            2. Convert each raw theme to an **extra-precise label** that meets *all* of these rules:  it's just an example !!
+               • no more than 3 words • only nouns/keywords (no verbs) • no generic terms such as “Business”, “Data”, “Events”.  
+               – Good ↦ “Fabric migration”, “Power BI”, “Generative AI”  
+               – Bad  ↦ “Cloud Solutions”, “Team events”.  
+            3. Count, per precise label, how many questions were answered incorrectly (`isUserAnswerCorrectly == false`).  
+            4. Select the labels with **two or more** wrong answers.  
+            5. Return a JSON **array of those labels**, unique and sorted from most to least wrong answers.  
+            6. Output JSON *only* – no markdown, no extra keys, no explanation text.
+            
+            """
         };
     }
 
     public async Task<IReadOnlyList<string>> DetectWeakTopicsAsync(
-        QuizDto quiz, IDictionary<string,double> scores, CancellationToken ct)
+    List<QuestionDto> questions, CancellationToken ct)
     {
+        var answersJson = JsonSerializer.Serialize(
+            questions.Select(q => new {
+                q.Id,
+                q.Content,
+                q.isUserAnswerCorrectly
+            }), _json);
+
         var userMsg = new ChatMessageContent(
             AuthorRole.User,
-            JsonSerializer.Serialize(new { quiz, scores }, _json));
+            $"=== ANSWERS JSON START ===\n{answersJson}\n=== ANSWERS JSON END ===");
 
-        await foreach (var resp in _agent.InvokeAsync(new[] { userMsg }, cancellationToken: ct))
+        await foreach (var resp in _agent.InvokeAsync(
+                           new[] { userMsg },      // 👈 message utilisateur
+                           cancellationToken: ct))
         {
-            return JsonSerializer.Deserialize<List<string>>(resp.Message.Content, _json)!;
+            return JsonSerializer.Deserialize<List<string>>(
+                       resp.Message.Content, _json)!.AsReadOnly();
         }
         return Array.Empty<string>();
     }
+
 
 }
