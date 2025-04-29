@@ -25,6 +25,8 @@ namespace API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            Console.WriteLine($"UserId: {userId}");
+
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized(new { error = "User not found" });
 

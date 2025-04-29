@@ -1,58 +1,35 @@
 import { Link } from 'react-router-dom';
 import './Body.css';
+import { useApi } from '../../../customs/useApi';
+import { useEffect, useState } from 'react';
 
 function Body() {
-    const moduleId = 1; // This should be dynamic based on the module selected
+    const { callApi } = useApi();
+    const [courses, setCourses] = useState([]);
+
+    useEffect(() => {
+        callApi("GET", "Course/all").then((response) => {
+            return response.json();
+        }).then((data) => {
+            console.log("Courses data:", data);
+            setCourses(data);
+        })
+    }, []);
     return (
         <div className="body">
-            <div className="module">
-                <h1>Course 1</h1>
-                <Link to={`/home/modules/${moduleId}`}>
-                    <div className='module-button'>
-                        <p>Go to modules</p>
+            {courses.map((course: any) => {
+                return (
+                    <div key={course.id} style={{ background: `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0")}` }} className="module">
+                        <h1>{course.title}</h1>
+                        <Link to={`/home/modules/${course.id}`}>
+                            <div className='module-button'>
+                                <p>Go to modules</p>
+                            </div>
+                        </Link>
                     </div>
-                </Link>
-            </div>
-            <div style={{ background: "#FFCB77" }} className="module">
-                <h1>Course 2</h1>
-                <Link to={`/home/modules/${moduleId}`}>
-                    <div className='module-button'>
-                        <p>Go to modules</p>
-                    </div>
-                </Link>
-            </div>
-            <div style={{ background: "#5C0029" }} className="module">
-                <h1>Course 3</h1>
-                <Link to={`/home/modules/${moduleId}`}>
-                    <div className='module-button'>
-                        <p>Go to modules</p>
-                    </div>
-                </Link>
-            </div>
-            <div style={{ background: "#EF9CDA" }} className="module">
-                <h1>Course 4</h1>
-                <Link to={`/home/modules/${moduleId}`}>
-                    <div className='module-button'>
-                        <p>Go to modules</p>
-                    </div>
-                </Link>
-            </div>
-            <div style={{ background: "#DAA49A" }} className="module">
-                <h1>Course 5</h1>
-                <Link to={`/home/modules/${moduleId}`}>
-                    <div className='module-button'>
-                        <p>Go to modules</p>
-                    </div>
-                </Link>
-            </div>
-            <div style={{ background: "#E4572E" }} className="module">
-                <h1>Course 6</h1>
-                <Link to={`/home/modules/${moduleId}`}>
-                    <div className='module-button'>
-                        <p>Go to modules</p>
-                    </div>
-                </Link>
-            </div>
+                )
+            })
+            }
         </div >
     )
 }

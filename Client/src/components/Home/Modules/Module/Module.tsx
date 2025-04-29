@@ -11,7 +11,14 @@ function Module() {
     const { callApi } = useApi();
 
     useEffect(() => {
-        callApi("GET", "modules")
+        callApi("GET", `Course/${id}/modules`).then((response) => {
+            return response.json();
+        }).then((data) => {
+            console.log(data);
+        }
+        ).catch((error) => {
+            console.error("Erreur lors de la récupération des modules :", error);
+        });
         fetch("/README.md")
             .then((response) => response.text())
             .then((text) => setMarkdownContent(text))
