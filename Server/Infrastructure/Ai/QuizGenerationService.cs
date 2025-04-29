@@ -46,7 +46,8 @@ public sealed class QuizGenerationService : IQuizGenerationService
                     { "id":"<guid>",
                       "content":"[Theme] …",
                       "type":"Checkbox",
-                      "choices":"Choice A|Choice B|Choice C|Choice D"
+                      "choices":"Choice A|Choice B|Choice C|Choice D",
+                      "answer": "<string>"
                     }
                   ]
                 }
