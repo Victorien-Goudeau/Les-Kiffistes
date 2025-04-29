@@ -35,7 +35,7 @@ Return JSON that matches *precisely* this C# schema:
 {
   "id":        "<guid>",
   "title":     "<string>",
-  "status":    "Pending",
+  "status":    "NotStarted",
   "courseId":  "<course-id>",
   "questions": [
     { "id":"<guid>",
