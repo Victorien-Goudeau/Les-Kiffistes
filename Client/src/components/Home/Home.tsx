@@ -22,7 +22,7 @@ function Home() {
         <div className='student-page'>
             <Navbar />
             <Routes>
-                <Route path="/modules/*" element={<Modules />} />
+                <Route path="/modules/:id/*" element={<Modules />} />
                 <Route path="eval" element={<Evaluation />} />
                 <Route path="/profile" element={<Body />} />
                 <Route path="/*" element={<Body />} />
