@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# SKEXP0110: Le type est utilisé à des fins d’évaluation uniquement et est susceptible d’être modifié ou supprimé dans les futures mises à jour. Supprimez ce diagnostic pour continuer.
+dotnet_diagnostic.SKEXP0110.severity = none
