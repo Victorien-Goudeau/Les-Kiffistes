@@ -22,17 +22,19 @@ public sealed class QuizApplicationService
         // 1) charger le cours avec ses quiz pour vérifier les doublons
         var course = await _courses.GetCourseById(courseId);
 
+        if (course == null)
+            throw new KeyNotFoundException($"Course with ID {courseId} not found.");
+
         // 3) Envoyer seulement le contenu nécessaire à l'agent
         var quizDto = await _ai.GenerateQuizAsync(DtoMapper.MapToDto(course), ct);
 
         // 4) Mapper en entité et rattacher à l'aggregate
         var quiz = new Quiz
         {
-            Id        = quizDto.Id,
-            CourseId  = course.Id,
-            Course    = course,
-            Title     = quizDto.Title,
-            Status    = Status.NotStarted,
+            Id = quizDto.Id,
+            CourseId = course.Id,
+            Title = quizDto.Title,
+            Status = Status.NotStarted,
             GeneratedAt = DateTimeOffset.UtcNow,
             Questions = quizDto.Questions.Select(q => new Question
             {
@@ -42,8 +44,6 @@ public sealed class QuizApplicationService
                 Type = q.Type,
                 Choices = q.Choices,
                 CorrectAnswers = q.Answer,
-                isUserAnswerCorrectly = q.isUserAnswerCorrectly,
-                Quiz = null
             }).ToList()
         };
 

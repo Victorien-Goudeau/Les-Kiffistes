@@ -7,7 +7,6 @@ export function useApi() {
             console.log("Token not found in localStorage, checking sessionStorage...");
             token = localStorage.getItem("token") || null;
         }
-        console.log("Token:", token);
         const options: RequestInit = {
             method: method,
             headers: {

@@ -69,29 +69,6 @@ namespace API.Controllers
             }
         }
 
-        [Authorize]
-        [HttpGet("{courseId}/quiz")]
-        public async Task<ActionResult<List<QuizDto>>> GetQuizByCourseId(string courseId)
-        {
-            try
-            {
-                var query = new GetCourseQuizQuery(){CourseId = courseId};
-                var quiz = await _mediator.Send(query);
-                return Ok(quiz);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new { error = "Invalid credentials." });
-            }
-            catch (InvalidOperationException e)
-            {
-                return BadRequest(new { error = e.Message });
-            }
-            catch
-            {
-                return BadRequest(new { error = "Unknown error." });
-            }
-        }
 
         [Authorize]
         [HttpGet("{courseId}/modules")]

@@ -6,7 +6,7 @@ function Modules() {
     return (
         <Routes>
             <Route path="/" element={<Module />} />
-            <Route path="eval" element={<Evaluation />} />
+            <Route path="eval/:id/*" element={<Evaluation />} />
         </Routes>
     );
 }

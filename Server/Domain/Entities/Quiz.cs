@@ -7,7 +7,6 @@ namespace Domain.Entities
         [JsonPropertyName("id")]
         public required string Id { get; set; }
         public required string CourseId { get; set; }
-        public required Course Course { get; set; }
         public string? AIModuleId { get; set; } // If it's an module quiz
         public AIModule? AIModule { get; set; }
         public DateTimeOffset GeneratedAt { get; set; }
