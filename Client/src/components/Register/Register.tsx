@@ -28,7 +28,8 @@ function Register() {
                 }
             })
             .then((data) => {
-                localStorage.setItem("token", data.token);
+                console.log("Registration successful:", data);
+                sessionStorage.setItem("token", data.accessToken);
                 window.location.href = `/home`;
             })
             .catch((error) => {

@@ -5,7 +5,7 @@ namespace Infrastructure.Repository
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
@@ -32,11 +32,6 @@ namespace Infrastructure.Repository
                 b.HasKey(c => c.Id);
                 b.Property(c => c.Id).ToJsonProperty("id");
                 b.HasPartitionKey(c => c.UserId);
-
-                b.HasMany(c => c.Quiz)
-                .WithOne(q => q.Course)
-                .HasForeignKey(q => q.CourseId)
-                .OnDelete(DeleteBehavior.Cascade);
 
                 b.HasMany(c => c.AIModules)
                 .WithOne(m => m.Course)
@@ -75,11 +70,6 @@ namespace Infrastructure.Repository
                 b.HasOne(q => q.AIModule)
                 .WithOne(m => m.Quiz)
                 .HasForeignKey<AIModule>(q => q.QuizId);
-
-                b.HasMany(q => q.Questions)
-                .WithOne(qt => qt.Quiz)
-                .HasForeignKey(qt => qt.QuizId)
-                .OnDelete(DeleteBehavior.Cascade);
 
                 b.Property(q => q.Status).HasConversion(
                     s => s.ToString(),

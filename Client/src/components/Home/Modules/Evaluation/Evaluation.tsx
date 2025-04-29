@@ -1,7 +1,22 @@
+import { useEffect } from "react";
 import "./Evaluation.css";
+import { useApi } from "../../../../customs/useApi";
+import { useParams } from "react-router-dom";
 
 function Evaluation() {
-    
+    console.log("apagnan");
+    const { callApi } = useApi();
+    const { id } = useParams<{ id: string }>();
+
+    useEffect(() => {
+        console.log("ID:", id);
+        callApi("GET", `quiz/${id}`).then((response) => {
+            return response.json();
+        }).then((data) => {
+            console.log(data);
+        });
+    }, []);
+
     return (
         <div className="evaluation-module">
             <h1>Evaluation</h1>

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useApi } from "../../../../customs/useApi";
 
 function AddFileComponent() {
@@ -24,7 +23,21 @@ function AddFileComponent() {
                     })
                     .then((data) => {
                         console.log("File uploaded successfully:", data);
-                        event.target.value = "";
+                        // event.target.files = null; // Clear the file input
+                        console.log("ID ouaiche :", data.id);
+
+                        callApi("POST", "quiz", JSON.stringify(data.id)).then((response) => {
+                            if (response.status === 200) {
+                                return response.json();
+                            } else {
+                                throw new Error("Quiz creation failed");
+                            }
+                        })
+                            .then((data) => {
+                                console.log("Quiz created successfully:", data);
+                                window.location.href = `/home/modules/eval/${data.id}`;
+                            });
+
                     })
                     .catch((error) => {
                         console.error("Error:", error);
