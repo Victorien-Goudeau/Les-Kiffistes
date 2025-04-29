@@ -23,6 +23,10 @@ public sealed class RemediationApplicationService
         string quizId, CancellationToken ct)
     {
         var quiz = await _quizzes.GetQuizById(quizId);
+
+        if (quiz == null)
+            throw new InvalidOperationException("Quiz not found.");
+
         var questionsDto = new List<QuestionDto>();
 
         foreach (var item in quiz)
