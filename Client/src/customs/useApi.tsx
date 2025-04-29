@@ -1,10 +1,13 @@
 export function useApi() {
 
     const callApi = async (method: string, route: string, body?: string | null) => {
-        let token = localStorage.getItem("token") || null;
-        if (token == null) {
-            token = sessionStorage.getItem("token") || null;
+        let token = sessionStorage.getItem("token") || null;
+        console.log("Token from localStorage:", token);
+        if (token === null) {
+            console.log("Token not found in localStorage, checking sessionStorage...");
+            token = localStorage.getItem("token") || null;
         }
+        console.log("Token:", token);
         const options: RequestInit = {
             method: method,
             headers: {
