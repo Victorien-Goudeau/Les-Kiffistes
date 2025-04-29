@@ -36,7 +36,7 @@ namespace Infrastructure.Service
 
             var keyBytes = Encoding.UTF8.GetBytes(_key);
             var securityKey = new SymmetricSecurityKey(keyBytes);
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
                 issuer: _issuer,

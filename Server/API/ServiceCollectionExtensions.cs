@@ -109,6 +109,7 @@ namespace API
                 })
                 .AddJwtBearer(opts =>
                 {
+                    opts.UseSecurityTokenValidators=true;
                     opts.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
