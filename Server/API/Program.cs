@@ -32,7 +32,6 @@ builder.Services.AddScoped<IRemediationService,        RemediationService>();
 
 // Services orchestrateurs
 builder.Services.AddScoped<QuizApplicationService>();
-builder.Services.AddScoped<RemediationApplicationService>();
 builder.Services.AddScoped<RemediationLoopService>();
 
 // ---------------------------------------------------------------------------
@@ -54,20 +53,32 @@ builder.Services.AddLogging(loggingBuilder =>
     loggingBuilder.SetMinimumLevel(LogLevel.Information);
 });
 
+;
 // Ajoutez le Kernel au conteneur de services
 builder.Services.AddSingleton<Kernel>(sp =>
 {
     var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
 
     var kernelBuilder = Kernel.CreateBuilder();
-    kernelBuilder.Services.AddSingleton(loggerFactory); // Injectez le LoggerFactory
+    kernelBuilder.Services.AddSingleton(loggerFactory);
     kernelBuilder.AddAzureOpenAIChatCompletion(
-            deploymentName: "gpt-4o",          // required
-            endpoint:       "https://aigenstudio6832366256.openai.azure.com/",            // required
-            apiKey:         "0d87619f35064fd9a6f6125d6c1bff57" 
+            deploymentName: builder.Configuration["DeploymentName"],
+            endpoint: builder.Configuration["Endpoint"],
+            apiKey: builder.Configuration["ApiKey"]
     );
 
     return kernelBuilder.Build();
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
 });
 
 // ---------------------------------------------------------------------------
@@ -91,9 +102,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
-app.UseCors("AllowOrigin");
 app.UseHttpLogging();
 app.UseAuthentication();
 app.UseAuthorization();
