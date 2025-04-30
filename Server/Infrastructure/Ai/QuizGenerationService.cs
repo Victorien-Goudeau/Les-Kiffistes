@@ -30,25 +30,27 @@ STEP 2 – For each theme, write **5 Checkbox questions** (total 15).
 • Prefix every question with its theme: **"[<theme>] <question text>"**.  
 • Do **not** output extra fields.
 
+⚠️ *Use plain parentheses only.* Whenever you need to show `(x1, x2)`, write it exactly like that—do **not** add any backslashes.  
+⚠️ *Conform strictly* to JSON-standard escapes: only `\"`, `\\`, `\n`, `\t`, `\uXXXX`, etc.
+
 Return JSON that matches *precisely* this C# schema:
-
-{
-  "id":        "<guid>",
-  "title":     "<string>",
-  "status":    "NotStarted",
-  "courseId":  "<course-id>",
-  "questions": [
-    { "id":"<guid>",
-      "content":"[Theme] …",
-      "type":"Checkbox",
-      "choices":"Choice A|Choice B|Choice C|Choice D",
-      "answer":"<string>"
-    }
-  ]
+{  
+  "id":"<guid>",  
+  "title":"<string>",  
+  "status":"NotStarted",  
+  "courseId":"<course-id>",  
+  "questions":[  
+    {  
+      "id":"<guid>",  
+      "content":"[Theme] …",  
+      "type":"Checkbox",  
+      "choices":"Choice A|Choice B|Choice C|Choice D",  
+      "answer":"<string>"  
+    }  
+  ]  
 }
-
-Rules → 3 themes, 5 questions per theme (15 total), valid JSON only.
 """
+
         };
     }
 
