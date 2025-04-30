@@ -25,19 +25,18 @@ function AddFileComponent() {
                     .then((data) => {
                         console.log("File uploaded successfully:", data);
                         console.log("ID ouaiche :", data.id);
-
-                        callApi("POST", "quiz", JSON.stringify(data.id)).then((response) => {
-                            if (response.status === 200) {
-                                return response.json();
-                            } else {
-                                throw new Error("Quiz creation failed");
-                            }
-                        })
-                            .then((data) => {
-                                console.log("Quiz created successfully:", data);
-                                event.target.files = null; // Clear the file input
-                                window.location.href = `/home/eval/${data.courseId}`;
-                            });
+                        window.location.href = `/home/modules/${data.id}`;
+                        // callApi("POST", "quiz", JSON.stringify(data.id)).then((response) => {
+                        //     if (response.status === 200) {
+                        //         return response.json();
+                        //     } else {
+                        //         throw new Error("Quiz creation failed");
+                        //     }
+                        // })
+                        //     .then((data) => {
+                        //         console.log("Quiz created successfully:", data);
+                        //         event.target.files = null; // Clear the file input
+                        //     });
 
                     })
                     .catch((error) => {

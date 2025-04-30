@@ -1,6 +1,6 @@
 // components/Evaluation/Evaluation.tsx
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import "./Evaluation.css";
 import { useApi } from "../../../../customs/useApi";
 
@@ -42,18 +42,19 @@ export default function Evaluation() {
     const { callApi } = useApi();
     const { id: urlId } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const [quiz, setQuiz] = useState<Quiz | null>(null);
+    const [quiz, setQuiz] = useState<Quiz | null>(location.state as Quiz);
     const [questionIndex, setQuestionIndex] = useState(0);
     const [score, setScore] = useState<number | null>(null);
-
+    const [isLoading, setIsLoading] = useState(false);
     // Charger le quiz depuis l'API (URL seulement pour le premier fetch)
-    useEffect(() => {
-        callApi("GET", `quiz/${urlId}`)
-            .then(res => res.json())
-            .then(data => setQuiz(data))
-            .catch(err => console.error("Erreur chargement quiz :", err));
-    }, [urlId, callApi]);
+    // useEffect(() => {
+    //     // callApi("GET", `quiz/${urlId}`)
+    //     //     .then(res => res.json())
+    //     //     .then(data => setQuiz(data))
+    //     //     .catch(err => console.error("Erreur chargement quiz :", err));
+    // }, [urlId, callApi]);
 
     const handleNextQuestion = async () => {
         if (!quiz) return;
@@ -107,6 +108,7 @@ export default function Evaluation() {
 
     const handleGenerateModule = async () => {
         if (!quiz) return;
+        setIsLoading(true);
 
         try {
             const res = await callApi(
@@ -119,6 +121,7 @@ export default function Evaluation() {
             // On navigue vers /remediation en passant l'objet complet
             navigate("/remediation", { state: data });
         } catch (err) {
+            setIsLoading(false);
             console.error("Erreur génération module :", err);
             alert("⚠️ Problème réseau ou serveur, réessayez plus tard.");
         }
@@ -176,7 +179,7 @@ export default function Evaluation() {
         <div className="evaluation-module">
             <h1>Votre score : {score.toFixed(2)}%</h1>
             <button className="submit-button" onClick={handleGenerateModule}>
-                Generate Module
+                {isLoading ? "Generating..." : "Generate Module"}
             </button>
         </div>
     );

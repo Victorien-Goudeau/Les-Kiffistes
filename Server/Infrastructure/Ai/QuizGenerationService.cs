@@ -23,9 +23,9 @@ public sealed class QuizGenerationService : IQuizGenerationService
 """
 You are an instructional designer.
 
-STEP 1 – Extract exactly **3 distinct themes** from {{$course}}.
+STEP 1 – Extract exactly **2 distinct themes** from {{$course}}.
 
-STEP 2 – For each theme, write **5 Checkbox questions** (total 15).  
+STEP 2 – For each theme, write **5 Checkbox questions** (total 10).  
 • Each question has **one correct answer**.  
 • Concatenate the four answer choices with a "|" pipe.  
 • Prefix every question with its theme: **"[<theme>] <question text>"**.  

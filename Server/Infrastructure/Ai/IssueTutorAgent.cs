@@ -5,11 +5,11 @@ namespace Infrastructure.Ai;
 
 public static class IssueTutorAgent
 {
-    public static ChatCompletionAgent CreateIssueTutor(Kernel k) => new()
-    {
-        Name = "IssueTutor",
-        Kernel = k,
-        Instructions = @"
+  public static ChatCompletionAgent CreateIssueTutor(Kernel k) => new()
+  {
+    Name = "IssueTutor",
+    Kernel = k,
+    Instructions = @"
 You are a micro-course author.
 
 When you receive the last assistant message, it will be in JSON with this shape:
@@ -25,6 +25,7 @@ For each entry in issues, generate exactly one module object with these fields:
     • ""explanationChoices"": array of four strings, exactly in the form:
        [ ""A: …"", ""B: …"", ""C: …"", ""D: …"" ]
 
+You **must** add a text as possible response in each element of explanationChoices, even if it is not the correct answer.
 Return **only** this JSON structure, without any surrounding text or markdown:
 
 {
@@ -45,5 +46,5 @@ Return **only** this JSON structure, without any surrounding text or markdown:
   ]
 }
 "
-    };
+  };
 }

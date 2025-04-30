@@ -6,6 +6,7 @@ import Body from "./Body/Body";
 import "./Home.css";
 import { useEffect } from "react";
 import Evaluation from "./Modules/Evaluation/Evaluation";
+import Remediation from "./Modules/Remediation/RemediationModules";
 
 function Home() {
     useEffect(() => {
@@ -24,6 +25,7 @@ function Home() {
             <Routes>
                 <Route path="/modules/:id/*" element={<Module />} />
                 <Route path="/eval/:id/*" element={<Evaluation />} />
+                {/* <Route path="/remediation" element={<Remediation />} /> */}
                 <Route path="/profile" element={<Body />} />
                 <Route path="/*" element={<Body />} />
             </Routes>

@@ -8,7 +8,7 @@ function Navbar() {
     return (
         <div className="navbar">
             <Link to="/home" className="logo link">
-                <h1>Teaching platform</h1>
+                <h1 style={{ color: '#F3FCF0' }}>Teaching platform</h1>
             </Link>
             <div className="navbar-actions">
                 {location.pathname === "/home" && (

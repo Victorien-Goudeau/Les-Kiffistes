@@ -1,7 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import "./Module.css";
 import { useEffect, useState } from "react";
-import { Link, Outlet, Route, Routes, useParams } from "react-router-dom";
+import { Link, Outlet, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { useApi } from "../../../../customs/useApi";
 
 interface Course {
@@ -24,6 +24,10 @@ function Module() {
     const [course, setCourse] = useState<Course | null>(null);
     const [modules, setModules] = useState<AIModule[] | null>(null);
     const [markdownText, setMarkdownText] = useState<string>("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
+
     const { id } = useParams<{ id: string }>();
 
     const { callApi } = useApi();
@@ -32,7 +36,7 @@ function Module() {
         callApi("GET", `Course/${id}`).then((response) => {
             return response.json();
         }).then((data) => {
-            console.log("data:",data);
+            console.log("data:", data);
             setCourse(data);
             setMarkdownText(data.content);
         }
@@ -43,7 +47,7 @@ function Module() {
         callApi("GET", `Course/${id}/modules`).then((response) => {
             return response.json();
         }).then((data) => {
-            console.log("modules:",data);
+            console.log("modules:", data);
             setModules(data);
         }
         ).catch((error) => {
@@ -52,6 +56,32 @@ function Module() {
 
 
     }, []);
+
+    const handleEvalGeneration = () => {
+        setIsLoading(true);
+        callApi("GET", `quiz/${id}`)
+            .then(res => res.json())
+            .then(data => navigate(`/home/eval/${data.id}`, { state: data }))
+            .catch((err) => {
+                console.error("Erreur chargement quiz :", err)
+                callApi("POST", "quiz", JSON.stringify(id)).then((response) => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else {
+                        throw new Error("Quiz creation failed");
+                    }
+                })
+                    .then((data) => {
+                        navigate(`/home/eval/${data.id}`, { state: data });
+                        console.log("Quiz created successfully:", data);
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        setIsLoading(false);
+                    });
+
+            });
+    }
 
     return (
         <div className="modules">
@@ -77,15 +107,15 @@ function Module() {
                     <>
                         <h1>{course.title}</h1>
                         <ReactMarkdown>{markdownText}</ReactMarkdown>
-                        <Link to={`/home/eval/${id}`} className="eval-link">
-                            <div className="eval-button">
-                                Start evaluation
-                            </div>
-                        </Link>
+                        {/* <Link to={`/home/eval/${id}`} className="eval-link"> */}
+                        <div className="eval-button" onClick={handleEvalGeneration}>
+                            {isLoading ? "Generating evaluation..." : "Start Evaluation"}
+                        </div>
+                        {/* </Link> */}
                     </>
                 )}
             </div>
-        </div>
+        </div >
     );
 }
 

@@ -2,6 +2,7 @@
 import { useLocation, Navigate } from "react-router-dom";
 import { useState } from "react";
 import "./RemediationModules.css";
+import Navbar from "../../Navbar/Navbar";
 
 export interface RemediationModule {
     label: string;
@@ -40,6 +41,7 @@ export default function Remediation() {
 
     return (
         <div className="evaluation-module">
+            <Navbar />
             <h1>Remediation</h1>
             <div className="remediation-modules">
                 {modules.map((mod, i) => {
