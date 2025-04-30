@@ -80,3 +80,55 @@
     border-color: #dc3545;
     color: #721c24;
 }
+
+.navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    height: 75px;
+
+    background: #1F271B;
+    color: #F3FCF0;
+
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.logo {
+    text-decoration: none;
+    color: inherit;
+}
+
+.navbar-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+
+    width: 60%;
+}
+
+.link {
+    text-decoration: none;
+    color: inherit;
+    font-weight: 500;
+    font-size: 18px;
+
+    &:hover {
+        text-decoration: underline;
+        text-decoration-style: solid;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+    }
+}
+
+.navbar-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 75px;
+}
