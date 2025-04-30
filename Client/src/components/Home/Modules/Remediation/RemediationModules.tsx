@@ -16,7 +16,7 @@ export interface RemediationModule {
 
 export default function Remediation() {
     const location = useLocation();
-    const data = location.state as { modules: RemediationModule[] } | undefined;
+    const data = location.state as { id: string, modules: RemediationModule[] } | undefined;
 
     const [revealed, setRevealed] = useState<boolean[]>(
         Array(data?.modules?.length || 0).fill(false)
@@ -34,8 +34,8 @@ export default function Remediation() {
 
     const onClick = (i: number, choice: string) => {
         if (revealed[i]) return;
-        setRevealed(r => { const a = [...r]; a[i]=true; return a; });
-        setSelected(s => { const a = [...s]; a[i]=choice; return a; });
+        setRevealed(r => { const a = [...r]; a[i] = true; return a; });
+        setSelected(s => { const a = [...s]; a[i] = choice; return a; });
     };
 
     return (
@@ -43,7 +43,7 @@ export default function Remediation() {
             <h1>Remediation</h1>
             <div className="remediation-modules">
                 {modules.map((mod, i) => {
-                    const choices = mod.question.choices.split("|").map(c=>c.trim());
+                    const choices = mod.question.choices.split("|").map(c => c.trim());
                     return (
                         <div className="remediation-card" key={i}>
                             <h2 className="remediation-label">{mod.label}</h2>
@@ -75,6 +75,7 @@ export default function Remediation() {
                     );
                 })}
             </div>
+            <button className="submit-button" onClick={() => window.location.href = `/home/modules/${data.id}`}>Back to course</button>
         </div>
     );
 }

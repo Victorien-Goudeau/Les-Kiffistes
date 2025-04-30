@@ -11,20 +11,21 @@ namespace Application.CommandHandlers
 
         public GetUserCoursesHandler(ICourseRepository courseRepository)
         {
-            _CourseRepository   = courseRepository;
+            _CourseRepository = courseRepository;
         }
 
         public async Task<List<CourseDto>> Handle(GetUserCoursesQuery command, CancellationToken cancellationToken)
         {
             var courses = await _CourseRepository.GetCoursesByUserId(command.UserId);
-            
-            return courses.Select(x => new CourseDto() {
+
+            return courses.Select(x => new CourseDto()
+            {
                 Id = x.Id,
                 Status = x.Status,
                 Title = x.Title,
                 Subject = x.Subject,
                 Content = x.Content,
-                FileContent = x.FileContent != null ? Convert.ToBase64String(x.FileContent) : null,
+                FileContent = x.FileContent != null ? x.FileContent : null,
                 CreatedAt = x.CreatedAt,
             }).ToList();
         }

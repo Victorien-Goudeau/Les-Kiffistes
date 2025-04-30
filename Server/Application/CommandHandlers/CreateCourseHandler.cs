@@ -15,7 +15,7 @@ namespace Application.CommandHandlers
         private readonly IPdfToMarkdownService _pdfToMarkdownService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        
+
         public CreateCourseHandler(ICourseRepository courseRepository, IUserRepository userRepository, IPdfToMarkdownService pdfToMarkdownService, IHttpContextAccessor httpContextAccessor)
         {
             _courseRepository = courseRepository;
@@ -31,17 +31,17 @@ namespace Application.CommandHandlers
             if (command.FileContent == null)
                 throw new InvalidOperationException("File Content can't be null.");
 
-            
+
             var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrWhiteSpace(userId))
                 throw new UnauthorizedAccessException("User is not authenticated.");
-            
+
             var user = await _userRepository.GetUserByIdAsync(userId);
 
             if (user == null)
                 throw new UnauthorizedAccessException("User is not authenticated.");
-            
+
             var fileContentBytes = Convert.FromBase64String(command.FileContent);
             var fileContent = await _pdfToMarkdownService.ConvertPdfToMarkdownAsync(fileContentBytes);
 
@@ -66,7 +66,7 @@ namespace Application.CommandHandlers
                 Title = createdCourse.Title,
                 Subject = createdCourse.Subject,
                 Content = createdCourse.Content,
-                FileContent = createdCourse.FileContent != null ? Convert.ToBase64String(createdCourse.FileContent) : null,
+                FileContent = createdCourse.FileContent != null ? createdCourse.FileContent : null,
                 CreatedAt = createdCourse.CreatedAt
             };
 
