@@ -20,7 +20,7 @@ This dynamic feedback loop enhances student understanding while minimizing manua
 ## 🧩 Technical Architecture
 
 **Architecture Diagram**  
-
+![Architecture Diagram](architecture.png)
 ---
 
 ## 🔗 Core Components
