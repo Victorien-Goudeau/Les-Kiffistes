@@ -77,7 +77,7 @@ function Module() {
                     <>
                         <h1>{course.title}</h1>
                         <ReactMarkdown>{markdownText}</ReactMarkdown>
-                        <Link to="/home/modules/eval" className="eval-link">
+                        <Link to={`/home/eval/${id}`} className="eval-link">
                             <div className="eval-button">
                                 Start evaluation
                             </div>
@@ -85,9 +85,6 @@ function Module() {
                     </>
                 )}
             </div>
-            {/* <Routes>
-                <Route path="eval" element={<Evaluation />} />
-            </Routes> */}
         </div>
     );
 }
