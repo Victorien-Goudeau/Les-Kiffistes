@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Application.Dtos;
 using Application.Interfaces;
 using Microsoft.SemanticKernel;
@@ -29,9 +30,6 @@ STEP 2 – For each theme, write **5 Checkbox questions** (total 15).
 • Concatenate the four answer choices with a "|" pipe.  
 • Prefix every question with its theme: **"[<theme>] <question text>"**.  
 • Do **not** output extra fields.
-
-⚠️ *Use plain parentheses only.* Whenever you need to show `(x1, x2)`, write it exactly like that—do **not** add any backslashes.  
-⚠️ *Conform strictly* to JSON-standard escapes: only `\"`, `\\`, `\n`, `\t`, `\uXXXX`, etc.
 
 Return JSON that matches *precisely* this C# schema:
 {  
@@ -78,9 +76,14 @@ Return JSON that matches *precisely* this C# schema:
                            new[] { userMsg }, cancellationToken: ct))
         {
             // 2) Deserialize with a *fresh* options instance.
-            var jsonOpts = CreateJsonOpts();
-            var quiz = JsonSerializer.Deserialize<QuizDto>(
-                           resp.Message.Content, jsonOpts)!;
+            string rawJson = resp.Message.Content;
+
+            // 2) Remove any backslash immediately before a parenthesis
+            //    turns "\(" into "(" and "\)" into ")"
+            string sanitized = Regex.Replace(rawJson, @"\\(?=[()])", "");
+
+
+            var quiz = JsonSerializer.Deserialize<QuizDto>(sanitized, CreateJsonOpts())!;
 
             // 3) Final domain adjustments
             quiz.CourseId = course.Id;
