@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar/Navbar";
-import Modules from "./Modules/Modules";
+import Module from "./Modules/Module/Module";
 import Body from "./Body/Body";
 
 import "./Home.css";
@@ -22,7 +22,7 @@ function Home() {
         <div className='student-page'>
             <Navbar />
             <Routes>
-                <Route path="/modules/:id/*" element={<Modules />} />
+                <Route path="/modules/:id/*" element={<Module />} />
                 <Route path="/eval/:id/*" element={<Evaluation />} />
                 <Route path="/profile" element={<Body />} />
                 <Route path="/*" element={<Body />} />

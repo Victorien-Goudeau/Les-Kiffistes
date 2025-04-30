@@ -1,30 +1,33 @@
-// using Application.Dtos;
-// using Application.Queries;
-// using Domain.Interfaces;
-// using MediatR;
+using Application.Dtos;
+using Application.Queries;
+using Domain.Interfaces;
+using MediatR;
 
-// namespace Application.CommandHandlers {
-//     public class GetCourseByIdQuery : IRequestHandler<GetCourseModulesQuery, List<AIModuleDto>> {
-//         private readonly ICourseRepository _icourseRepository;
+namespace Application.CommandHandlers {
+    public class GetCourseByIdHandler : IRequestHandler<GetCourseByIdQuery, CourseDto?> {
+        private readonly ICourseRepository _icourseRepository;
 
-//         public GetCourseByIdQuery(ICourseRepository icourseRepository) {
-//             _icourseRepository = icourseRepository;
-//         }
+        public GetCourseByIdHandler(ICourseRepository icourseRepository) {
+            _icourseRepository = icourseRepository;
+        }
 
-//         public async Task<List<AIModuleDto>> Handle(GetCourseModulesQuery request, CancellationToken cancellationToken)
-//         {
-//             var aimodules = await _icourseRepository.GetModulesByCourseId(request.CourseId);
+        public async Task<CourseDto?> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
+        {
+            var course = await _icourseRepository.GetCourseById(request.CourseId);
 
-//             if (aimodules == null) {
-//                 throw new KeyNotFoundException("Modules related to this course not found.");
-//             }
+            if (course == null) {
+                throw new KeyNotFoundException("Modules related to this course not found.");
+            }
 
-//             return aimodules.Select(m => new AIModuleDto() {
-//                 Id = m.Id,
-//                 Title = m.Title,
-//                 Content = m.Content,
-//                 Status = m.Status,
-//             }).ToList();
-//         }
-//     }
-// }
+            return new CourseDto() {
+                Id= course.Id,
+                Status = course.Status,
+                Title = course.Title,
+                Subject = course.Subject,
+                Content = course.Content,
+                FileContent = course.FileContent,
+                CreatedAt = course.CreatedAt
+            };
+        }
+    }
+}

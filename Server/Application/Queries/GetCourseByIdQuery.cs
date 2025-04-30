@@ -1,9 +1,9 @@
 namespace Application.Queries
 {
-    using Domain.Entities;
+    using Application.Dtos;
     using MediatR;
 
-    public class GetCourseByIdQuery : IRequest<Course?>
+    public class GetCourseByIdQuery : IRequest<CourseDto?>
     {
         public required string CourseId { get; set; }
     }
