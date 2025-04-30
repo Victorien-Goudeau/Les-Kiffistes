@@ -9,13 +9,13 @@ namespace API.Controllers;
 [Route("api/remediation")]
 public sealed class RemediationController : ControllerBase
 {
-    private readonly RemediationLoopService  remediationApplicationService;
+    private readonly RemediationLoopService  _remediationApplicationService;
 
-    public RemediationController(RemediationLoopService  remediationService) =>
-        remediationApplicationService = remediationService;
+    public RemediationController(RemediationLoopService remediationApplicationService) =>
+        _remediationApplicationService = remediationApplicationService;
 
     /// <summary>
-    /// Generates a quiz for the given course.
+    /// Generates modules for the given course.
     /// </summary>
     [HttpPost]                                         // matches POST requests :contentReference[oaicite:1]{index=1}
     [ProducesResponseType<QuizDto>(StatusCodes.Status200OK)]
@@ -24,10 +24,10 @@ public sealed class RemediationController : ControllerBase
     public async Task<IActionResult> GenerateAsync(
         string quizId, CancellationToken ct)
     {
-        try
+        try 
         {
-            var quiz = await remediationApplicationService.RunAsync(quizId, ct);
-            return Ok(quiz);                          // serialised as JSON by default :contentReference[oaicite:2]{index=2}
+            var modules = await _remediationApplicationService.RunAsync(quizId, ct);
+            return Ok(modules);                          // serialised as JSON by default :contentReference[oaicite:2]{index=2}
         }
         catch (KeyNotFoundException)
         {
@@ -37,9 +37,9 @@ public sealed class RemediationController : ControllerBase
         {
             return BadRequest("Course ID cannot be null.");
         }
-        catch (InvalidOperationException)
+        catch (InvalidOperationException e)
         {
-            return NotFound();
+            return NotFound(e.Message);
         }
     }
 }
