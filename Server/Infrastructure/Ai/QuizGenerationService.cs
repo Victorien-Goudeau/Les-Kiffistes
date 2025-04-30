@@ -17,7 +17,7 @@ public sealed class QuizGenerationService : IQuizGenerationService
     {
         _agent = new ChatCompletionAgent
         {
-            Name   = "QuizGen",
+            Name = "QuizGen",
             Kernel = kernel,
             Instructions =
 """
@@ -80,14 +80,15 @@ Return JSON that matches *precisely* this C# schema:
 
             // 2) Remove any backslash immediately before a parenthesis
             //    turns "\(" into "(" and "\)" into ")"
-            string sanitized = Regex.Replace(rawJson, @"\\(?=[()])", "");
 
+            string sanitized = Regex.Replace(rawJson, @"\\(?=[()])|```json|`", "");
 
+            Console.WriteLine($"Sanitized JSON: {sanitized}");
             var quiz = JsonSerializer.Deserialize<QuizDto>(sanitized, CreateJsonOpts())!;
 
             // 3) Final domain adjustments
             quiz.CourseId = course.Id;
-            quiz.Status   = Status.NotStarted;   // enforce legal enum value
+            quiz.Status = Status.NotStarted;   // enforce legal enum value
             return quiz;
         }
 
