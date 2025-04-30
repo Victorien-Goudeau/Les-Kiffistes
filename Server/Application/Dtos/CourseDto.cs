@@ -7,7 +7,7 @@ namespace Application.Dtos
         public string? Title { get; set; }
         public string? Subject { get; set; }
         public string? Content { get; set; }
-        public string? FileContent { get; set; }
+        public byte[]? FileContent { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
     }
 }

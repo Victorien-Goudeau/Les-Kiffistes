@@ -69,6 +69,10 @@
     transition: background-color 0.3s ease;
 }
 
+.module-link-button {
+    max-height: 20px;
+}
+
 .modules-list {
     display: flex;
     flex-direction: column;

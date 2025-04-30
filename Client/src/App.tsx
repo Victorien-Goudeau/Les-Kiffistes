@@ -9,11 +9,6 @@ function App() {
   return (
 
     <div className="App">
-      {/* {user ? (
-        <Home />
-      ) : (
-        <Login />
-      )} */}
       <Router>
         <Routes>
           <Route path="/" element={<Login />} />

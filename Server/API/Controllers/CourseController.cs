@@ -69,6 +69,30 @@ namespace API.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet("{courseId}")]
+        public async Task<ActionResult<CourseDto>> GetCourseById(string courseId)
+        {
+            try
+            {
+                Console.WriteLine($"CourseId: {courseId}");
+                var query = new GetCourseByIdQuery(){CourseId = courseId};
+                var Course = await _mediator.Send(query);
+                return Ok(Course);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized(new { error = "Invalid credentials." });
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(new { error = e.Message });
+            }
+            catch
+            {
+                return BadRequest(new { error = "Unknown error." });
+            }
+        }
 
         [Authorize]
         [HttpGet("{courseId}/modules")]
