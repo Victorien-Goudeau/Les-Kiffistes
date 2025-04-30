@@ -51,6 +51,8 @@ export default function Remediation() {
                             <h2 className="remediation-label">{mod.label}</h2>
                             <p className="remediation-lesson">{mod.lesson}</p>
                             <h3>{mod.question.prompt}</h3>
+                            {/* Add choices explanation */}
+                            { mod.question.explanationChoices.map((c) => <p>{c}</p>) }
                             <div className="remediation-choices">
                                 {choices.map((c, idx) => {
                                     let cls = "choice-button";
