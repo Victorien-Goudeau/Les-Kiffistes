@@ -5,6 +5,7 @@ import "./Evaluation.css";
 import { useApi } from "../../../../customs/useApi";
 
 export interface RemediationModule {
+    id: string;
     label: string;
     lesson: string;
     question: {
@@ -113,8 +114,8 @@ export default function Evaluation() {
                 `remediation?quizId=${quiz.id}`     // <-- quiz.id et non urlId
             );
             if (!res.ok) throw new Error("Échec génération");
-            const data = (await res.json()) as { modules: RemediationModule[] };
-
+            let data = (await res.json()) as { id: string, modules: RemediationModule[] };
+            data.id = urlId!; // On ajoute l'id du quiz à l'objet de réponse
             // On navigue vers /remediation en passant l'objet complet
             navigate("/remediation", { state: data });
         } catch (err) {
