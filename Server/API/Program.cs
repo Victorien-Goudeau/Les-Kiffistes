@@ -5,6 +5,7 @@ using Infrastructure.Ai;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
+using Microsoft.SemanticKernel.Agents.Magentic;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -82,14 +83,14 @@ builder.Services.AddCors(options =>
 });
 
 // ---------------------------------------------------------------------------
-// 4. AgentGroupChat (orchestration multi-agents)
+// 4. MagenticOrchestration (multi-agents)
 // ---------------------------------------------------------------------------
 #pragma warning disable SKEXP0110
-builder.Services.AddSingleton<AgentGroupChat>(sp =>
+builder.Services.AddSingleton<MagenticOrchestration>(sp =>
 #pragma warning restore SKEXP0110
 {
     var kernel = sp.GetRequiredService<Kernel>();
-    return AgentOrchestration.Build(kernel);       // crée IssueDetector, IssueTutor, Coach
+    return AgentOrchestration.Build(kernel);       // crée IssueDetector, IssueTutor, Coach, Cuisine
 });
 
 // ---------------------------------------------------------------------------
