@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Application.Dtos;
 using Microsoft.SemanticKernel.Agents.Chat;
+using Microsoft.SemanticKernel.Agents.Magentic;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
@@ -13,14 +14,14 @@ namespace Application.Services;
 public sealed class RemediationLoopService
 {
 #pragma warning disable SKEXP0110
-    private readonly AgentGroupChat _chat;
+    private readonly MagenticOrchestration _chat;
 #pragma warning restore SKEXP0110
     private readonly JsonSerializerOptions _json = new(JsonSerializerDefaults.Web);
     private readonly IQuizRepository _quizzes;
     private readonly ILogger<RemediationLoopService> _logger;
 
 #pragma warning disable SKEXP0110
-    public RemediationLoopService(AgentGroupChat chat, IQuizRepository quizzes,
+    public RemediationLoopService(MagenticOrchestration chat, IQuizRepository quizzes,
         ILogger<RemediationLoopService> logger)
 #pragma warning restore SKEXP0110
     {

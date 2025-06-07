@@ -25,15 +25,16 @@ This dynamic feedback loop enhances student understanding while minimizing manua
 
 ## 🔗 Core Components
 
-### 🧠 3 Specialized Agents
+### 🧠 4 Specialized Agents
 
 - **Quiz Generator Agent (GPT-4.1):** Extracts key concepts and formulates relevant questions from the uploaded course.
 - **Performance Analyzer Agent (GPT-4.1):** Evaluates quiz results to identify misunderstood concepts and skill gaps.
 - **Remediation Agent (GPT-4.1):** Builds custom learning modules and explanations to reinforce weak areas.
+- **Cuisine Agent (GPT-4.1):** Provides cooking tips and simple recipes on request.
 
 ### 🤖 Agent Manager
 
-- Orchestrated by **Semantic Kernel**, it coordinates agent interactions, manages context, and ensures learning continuity.
+- Powered by **Magentic** and **Semantic Kernel**, it coordinates agent interactions, manages context, and ensures learning continuity.
 
 ---
 
